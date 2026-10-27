@@ -569,6 +569,21 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
 .dopt.win .dbar i{background:var(--pink)}
 .dopt .dn{font-variant-numeric:tabular-nums;text-align:right;font-weight:700;font-size:.9rem}
 @media (max-width:640px){.dopt{grid-template-columns:1fr 80px}.dopt .dbar{grid-column:1/-1;order:3}}
+
+/* v11 */
+.who2{display:block;font-size:.78rem;color:var(--muted);font-weight:500;line-height:1.3;margin-top:4px}
+.who2:empty{display:none}
+.vote .who2{flex-basis:100%;text-align:left}
+.vote{flex-wrap:wrap}
+.dopt .dwho{grid-column:1/-1;margin-top:0}
+.mychoices{display:grid;gap:6px;margin:6px 0 4px}
+.mc-title{font-weight:700;font-size:.9rem;color:var(--muted)}
+.mc{padding:6px 12px;border-radius:10px;background:var(--surface);border:1.5px solid var(--line);font-size:.92rem}
+.mc.none{opacity:.6}
+.mc b{color:var(--pink);margin-right:6px}
+.navbtn:disabled,.btn:disabled{opacity:.35;cursor:default;transform:none}
+.thanks-en{display:block;font-size:.45em;font-weight:600;color:var(--muted);margin-top:.15em}
+body[data-mode="participant"].is-live .roadbar{pointer-events:none}
 </style>
 </head>
 <body data-mode="participant">
@@ -580,7 +595,7 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
       <span class="chip presenter-only" title="Starts when you leave the title slide. Click to reset.">Elapsed <strong id="elapsed" style="cursor:pointer">00:00</strong></span>
       <span class="chip presenter-only" id="pace">Not started</span>
       <span class="chip" id="liveChip" title="No database connected. Votes stay on this screen."><i class="live-dot"></i><span id="liveText">Offline mode</span></span>
-      <button class="chip participant-only" id="followBtn" hidden aria-pressed="true">Following the host ✓</button>
+      <span class="chip participant-only" id="followBtn" hidden>Following the host ✓</span>
       <span class="chip mini-timer presenter-only" id="miniTimer">⏱ <strong id="miniT">0:00</strong></span>
     </div>
     <div class="tools">
@@ -872,6 +887,7 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
         <div class="step">
           <p class="question" style="max-width:none">Which decision was the hardest for you, and why?</p>
           <p class="ko">네 가지 결정 중 가장 어려웠던 것은? 그리고 그 이유는?</p>
+          <div class="mychoices" id="myChoices"></div>
           <div class="phrases"><span>"The hardest one for me was… because…"</span><span>"If we choose…, the risk is…"</span><span>"So the skill our team needs most is…"</span></div>
           <div class="row presenter-only"><button class="btn teal" data-timer="60">Think · 1 min</button><button class="btn" data-timer="120">Pair · 2 min</button><button class="btn pink" data-pick>Pick a speaker 🛺</button><button class="btn small" data-clear="d3:">Reset all four votes</button></div>
         </div>
@@ -919,7 +935,7 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
     <section class="slide" data-start="58" data-label="Thank you" data-id="closing" data-stop="Closing">
       <div class="inner">
         <p class="thai" style="font-size:clamp(1.4rem,3vw,2.2rem);color:var(--teal)">ขอบคุณครับ / ค่ะ</p>
-        <h1 class="thanks display">Khob khun krap 🙏</h1>
+        <h1 class="thanks display">Khob khun krap 🙏<br><span class="thanks-en">Thank you</span></h1>
         <p class="lead">Next time someone seems too slow, too direct, or too quiet, take a breath: <b>mai pen rai.</b><br>Then ask about the rule behind it.</p>
         <div class="panel soft">
           <h3 style="margin-bottom:10px">How was the ride?</h3>
@@ -937,13 +953,13 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
   </main>
 
   <footer class="roadbar">
-    <button class="navbtn" id="prev" aria-label="Previous slide">←</button>
+    <button class="navbtn host-ctl" id="prev" aria-label="Previous slide">←</button>
     <div class="road" id="road">
       <div class="asphalt"></div>
       <div class="done" id="done"></div>
       <div class="tuktuk" id="tuktuk" aria-hidden="true"><span>🛺</span></div>
     </div>
-    <button class="navbtn" id="next" aria-label="Next slide">→</button>
+    <button class="navbtn host-ctl" id="next" aria-label="Next slide">→</button>
   </footer>
 </div>
 
@@ -1153,9 +1169,10 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
     if (document.querySelector('dialog[open]')) return;
+    if (e.key === 'f' || e.key === 'F'){ fullscreen(); return; }
+    if (!PRESENTER && LIVE) return;
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); next(); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
-    else if (e.key === 'f' || e.key === 'F') fullscreen();
     else if (!PRESENTER) return;
     else if (e.key === 'n' || e.key === 'N') toggleNotes();
     else if (e.key === 't' || e.key === 'T') toggleTimer();
@@ -1168,18 +1185,12 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
   $('#stage').addEventListener('touchend', e => {
     if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
     const t = e.target.tagName.toLowerCase();
-    if (t === 'input') return;
+    if (t === 'input' || (!PRESENTER && LIVE)) return;
     if (Math.abs(dx) > 80){ dx < 0 ? next() : prev(); }
   });
 
   // participant follow toggle
   const fb = $('#followBtn');
-  fb.addEventListener('click', () => {
-    following = !following;
-    fb.setAttribute('aria-pressed', following);
-    fb.textContent = following ? 'Following the host ✓' : 'Browsing on my own';
-    if (following){ lastNavT = 0; applyRemoteNav(); renderAll(); }
-  });
 
   /* =========== session clock =========== */
   let sessionStart = null;
@@ -1427,6 +1438,17 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
     S = Object.assign(empty(), { people:S.people, nav:S.nav }); renderAll();
     act('reset', {}); toast('Room cleared');
   });
+  function whoChose(obj, value){
+    if (!LIVE) return '';
+    const names = Object.keys(obj || {}).filter(id => String(obj[id]) === String(value) && S.people[id]).map(id => S.people[id]);
+    return names.length ? names.join(', ') : '';
+  }
+  function setWho(el, text){
+    if (!el) return;
+    let w = el.querySelector('.who2');
+    if (!w){ w = document.createElement('span'); w.className = 'who2'; el.appendChild(w); }
+    w.textContent = text;
+  }
   const count = obj => { const c = {}; Object.values(obj || {}).forEach(v => { c[v] = (c[v] || 0) + 1; }); return c; };
   const mine = obj => LIVE ? (obj || {})[CID] : undefined;
 
@@ -1437,6 +1459,7 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
       b.querySelector('.bar i').style.width = (vals[i]/max*100) + '%';
       b.querySelector('.count').textContent = vals[i] + (vals[i] === 1 ? ' person' : ' people');
       b.classList.toggle('mine', mine(S.speed) === String(i));
+      setWho(b, whoChose(S.speed, i));
     });
   }
   $$('#speeds .speed').forEach((b, i) => b.addEventListener('click', () => { castVote('speed', i); floatEmoji(b.querySelector('.big').textContent, b); }));
@@ -1444,17 +1467,17 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
   // round 1
   function renderR1(){
     const c = count(S.r1);
-    $$('[data-r1]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r1] || 0); b.classList.toggle('mine', mine(S.r1) === b.dataset.r1); });
+    $$('[data-r1]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r1] || 0); b.classList.toggle('mine', mine(S.r1) === b.dataset.r1); setWho(b, whoChose(S.r1, b.dataset.r1)); });
   }
   $$('[data-r1]').forEach(b => b.addEventListener('click', () => { castVote('r1', b.dataset.r1); floatEmoji(b.dataset.r1 === 'fast' ? '🙋' : '🤐', b); }));
   function renderR2(){
     const c = count(S.r2);
-    $$('[data-r2]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r2] || 0); b.classList.toggle('mine', mine(S.r2) === b.dataset.r2); });
+    $$('[data-r2]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r2] || 0); b.classList.toggle('mine', mine(S.r2) === b.dataset.r2); setWho(b, whoChose(S.r2, b.dataset.r2)); });
   }
   $$('[data-r2]').forEach(b => b.addEventListener('click', () => { castVote('r2', b.dataset.r2); floatEmoji('😤', b); }));
   function renderR3(){
     const c = count(S.r3);
-    $$('[data-r3]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r3] || 0); b.classList.toggle('mine', mine(S.r3) === b.dataset.r3); });
+    $$('[data-r3]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r3] || 0); b.classList.toggle('mine', mine(S.r3) === b.dataset.r3); setWho(b, whoChose(S.r3, b.dataset.r3)); });
   }
   $$('[data-r3]').forEach(b => b.addEventListener('click', () => { castVote('r3', b.dataset.r3); floatEmoji(b.dataset.r3 === 'l' ? '🇰🇷' : '🌍', b); }));
 
@@ -1610,8 +1633,7 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
     ['After the workshop, the overseas host invites everyone for drinks.',
      'Go. Relationships are built after hours.', 'Go home. The workshop was the work.',
      'The 회식 debate, global edition. In some cultures trust is built over dinner, in others over deadlines. 🍻', 'Dial 4: Trust 🤝',
-     { title:'Korean workers who prefer "lunch, no alcohol" over "evening with drinks," by age (2022)', src:'Incruit survey of 1,013 workers, 2022 (overall: lunch 45.8% vs. evening drinks 29.7%). A 2024 Handok survey of 124 office workers: 70% see evening 회식 as an extension of work.', max:100,
-       bars:[['In their 20s',65.6],['In their 30s',71.2],['In their 40s',45.3],['50 and older',31.3]] }],
+     { title:'Where is trust built: through work, or through meals and time together? (task-based to relationship-based)', src:'Erin Meyer (INSEAD), The Culture Map, Trusting scale. In Korea, a 2024 Handok survey of 124 office workers found 70% see evening 회식 as an extension of work, not free time.', rank:['United States','Netherlands','Germany','Japan','Korea','Thailand','China'] }],
     ['During a group exercise, a junior colleague openly disagrees with your idea.',
      'Fine, but tell me privately first', "Great! That's exactly what we want.",
      'Hierarchy is a dial, not a rule. Korea is moving, but how fast? Ask the juniors in this room. 😏', 'Dial 3: Hierarchy 🎩', PDI]
@@ -1646,17 +1668,19 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
       else h = p > 50 ? 'Mostly B. Anyone brave enough to pick A?' : 'Mostly A. Any B rebels in the room?';
     }
     $('#heat').textContent = h;
-    $('#take').textContent = sits[si][3]; $('#take').classList.toggle('on', revealed);
+    $('#take').textContent = revealed ? sits[si][3] : ''; $('#take').classList.toggle('on', revealed);
     renderFact(revealed ? sits[si][5] : null);
     Array.from(dots.children).forEach((d, i) => d.classList.toggle('on', i === si));
     const my = LIVE && S.game[si] ? S.game[si][CID] : undefined;
     $('#vSlow').classList.toggle('mine', my === 'slow'); $('#vFast').classList.toggle('mine', my === 'fast');
+    setWho($('#vSlow'), whoChose(S.game[si], 'slow')); setWho($('#vFast'), whoChose(S.game[si], 'fast'));
+    $('#sitPrev').disabled = si === 0; $('#sitNext').disabled = si === sits.length - 1;
   }
   $('#vSlow').addEventListener('click', e => { castVote('game', 'slow', si); floatEmoji('🕊️', e.currentTarget); });
   $('#vFast').addEventListener('click', e => { castVote('game', 'fast', si); floatEmoji('🗣️', e.currentTarget); });
   $('#sitReveal').addEventListener('click', () => { revealed = true; renderSit(); pushNav(); });
-  $('#sitNext').addEventListener('click', () => { si = (si+1) % sits.length; revealed = false; renderSit(); pushNav(); });
-  $('#sitPrev').addEventListener('click', () => { si = (si-1+sits.length) % sits.length; revealed = false; renderSit(); pushNav(); });
+  $('#sitNext').addEventListener('click', () => { if (si < sits.length - 1){ si++; revealed = false; renderSit(); pushNav(); } });
+  $('#sitPrev').addEventListener('click', () => { if (si > 0){ si--; revealed = false; renderSit(); pushNav(); } });
 
   /* =========== dials diagram =========== */
   (function(){
@@ -1707,16 +1731,31 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
     d.opts.forEach(([id, label]) => {
       const n = c[id] || 0; const pct = total ? Math.round(n/total*100) : 0;
       const b = document.createElement('button'); b.className = 'dopt' + (my === id ? ' mine' : '') + (drevealed && n === maxv && n > 0 ? ' win' : '');
-      b.innerHTML = '<span class="dl2">' + label + '</span><span class="dbar"><i style="width:' + (total ? n/maxv*100 : 0) + '%"></i></span><span class="dn">' + n + (total ? ' (' + pct + '%)' : '') + '</span>';
+      const who = whoChose(S.d3[di], id);
+      b.innerHTML = '<span class="dl2">' + label + '</span><span class="dbar"><i style="width:' + (total ? n/maxv*100 : 0) + '%"></i></span><span class="dn">' + n + (total ? ' (' + pct + '%)' : '') + '</span>' + (who ? '<span class="who2 dwho">' + who + '</span>' : '');
       b.addEventListener('click', () => { castVote('d3', id, di); floatEmoji('🗳️', b); });
       box.appendChild(b);
     });
-    $('#decTake').textContent = d.take; $('#decTake').classList.toggle('on', drevealed);
+    $('#decTake').textContent = drevealed ? d.take : ''; $('#decTake').classList.toggle('on', drevealed);
     Array.from(ddots.children).forEach((x, i) => x.classList.toggle('on', i === di));
+    $('#decPrev').disabled = di === 0; $('#decNext').disabled = di === decs.length - 1;
+    renderMyChoices();
+  }
+  function renderMyChoices(){
+    const box = $('#myChoices'); if (!box) return;
+    box.innerHTML = '';
+    const rows = [];
+    if (LIVE && !PRESENTER){
+      decs.forEach((d, i) => { const v = S.d3[i] ? S.d3[i][CID] : undefined; const o = d.opts.find(x => x[0] === v); rows.push('<span class="mc' + (o ? '' : ' none') + '"><b>' + d.tag + '</b> ' + (o ? o[1] : 'not voted yet') + '</span>'); });
+      box.innerHTML = '<p class="mc-title">Your four choices</p>' + rows.join('');
+    } else {
+      decs.forEach((d, i) => { const c = count(S.d3[i]); const total = Object.values(c).reduce((a, b) => a + b, 0); const top = d.opts.slice().sort((a, b) => (c[b[0]] || 0) - (c[a[0]] || 0))[0]; rows.push('<span class="mc' + (total ? '' : ' none') + '"><b>' + d.tag + '</b> ' + (total ? top[1] + ' (' + (c[top[0]] || 0) + ' of ' + total + ')' : 'no votes yet') + '</span>'); });
+      box.innerHTML = '<p class="mc-title">What the room chose</p>' + rows.join('');
+    }
   }
   if ($('#decNext')){
-    $('#decNext').addEventListener('click', () => { di = (di+1) % decs.length; drevealed = false; renderDec(); pushNav(); });
-    $('#decPrev').addEventListener('click', () => { di = (di-1+decs.length) % decs.length; drevealed = false; renderDec(); pushNav(); });
+    $('#decNext').addEventListener('click', () => { if (di < decs.length - 1){ di++; drevealed = false; renderDec(); pushNav(); } });
+    $('#decPrev').addEventListener('click', () => { if (di > 0){ di--; drevealed = false; renderDec(); pushNav(); } });
     $('#decReveal').addEventListener('click', () => { drevealed = true; renderDec(); pushNav(); });
   }
   $$('.wcard').forEach(w => w.addEventListener('click', () => w.classList.toggle('on')));

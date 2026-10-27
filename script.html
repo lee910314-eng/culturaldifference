@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Script: Why did they do that?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F3FF;--surface:#fff;--ink:#1E1A4D;--muted:#5F5A8C;--line:#DAD5F3;--pink:#F2357F;--teal:#0F8C76;--mango:#FFB21E;--sky:#DCEBFF;--mango-soft:#FFF1D2;--teal-soft:#DDF4EE;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#15122C;--surface:#211D40;--ink:#F1EEFF;--muted:#ABA6D2;--line:#38335F;--sky:#26305A;--mango-soft:#3A2F17;--teal-soft:#123A35;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15122C;--surface:#211D40;--ink:#F1EEFF;--muted:#ABA6D2;--line:#38335F;--sky:#26305A;--mango-soft:#3A2F17;--teal-soft:#123A35;color-scheme:dark}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-size:clamp(17px,1.5vw,22px);line-height:1.6}
+.top{position:sticky;top:0;background:var(--bg);padding:12px clamp(16px,4vw,40px);display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1.5px solid var(--line);z-index:5;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-size:.8rem}
+.chip.live{border-color:var(--teal);color:var(--teal)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.chip.live .dot{background:var(--teal)}
+button{font:inherit;color:inherit;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;cursor:pointer;font-size:.85rem}
+main{max-width:980px;margin:0 auto;padding:20px clamp(16px,4vw,40px) 80px}
+h1{font-family:"Bricolage Grotesque","Noto Sans KR",sans-serif;font-size:clamp(1.6rem,3.6vw,2.6rem);line-height:1.1;margin:0 0 6px}
+.meta{color:var(--muted);font-size:.85rem;margin-bottom:18px}
+.block{margin:0 0 18px}
+.say{background:var(--surface);border-left:6px solid var(--pink);border-radius:0 14px 14px 0;padding:14px 18px;margin:0 0 10px;font-size:1.05em}
+.say.q{border-left-color:var(--teal)}
+.say.alt{border-left-color:var(--mango)}
+.lbl{font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.02em;margin-bottom:4px}
+.ko{color:var(--muted);font-size:.85em;margin-top:4px}
+.tip{background:var(--mango-soft);border-radius:12px;padding:10px 14px;font-size:.9em}
+.sub{margin-top:18px;padding-top:14px;border-top:1.5px dashed var(--line)}
+.sub h2{font-size:1.05em;margin:0 0 8px;font-family:"Bricolage Grotesque",sans-serif}
+.nav{display:flex;gap:8px;align-items:center}
+.hint{font-size:.8rem;color:var(--muted)}
+@media print{.top{position:static}.say{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="chip" id="live"><i class="dot"></i><span id="liveT">Connecting…</span></span><span class="chip" id="where">Slide 1 of 15</span></div>
+  <div class="nav"><button id="prev">←</button><button id="next">→</button><button id="follow" aria-pressed="true">Following the screen ✓</button><button id="bigger">A+</button></div>
+</header>
+<main id="main"></main>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  const ROOM = (qs.get('room') || 'main').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30) || 'main';
+  const S = [
+    { t:'Title: Why did they do that?', time:'0–2 min', say:[
+      ['Good morning, everyone. Thank you for joining today.'],
+      ['Today\u2019s topic is cultural difference at work.'],
+      ['Have you ever looked at a colleague and thought, \u201cWhy did they do that?\u201d That feeling is where we start today.'],
+      ['Please scan the QR code with your phone and type your name. We will vote many times today, so keep your phone open.']],
+      ko:'QR 안내 후 대부분 접속하면 시작. 상단 칩의 인원수를 확인.' },
+    { t:'Agenda', time:'2–4 min', say:[
+      ['Here is our plan for one hour.'],
+      ['First, a short story from Thailand. Then two simple tools. Then a game. Then three discussion rounds. And at the end, your culture passport.'],
+      ['Three rules for today. One: grammar mistakes are welcome. Ideas are more important than perfect English. Two: everyone speaks at least twice. Short answers are fine. Three: we talk about tendencies, not stereotypes. No culture is better or worse.']],
+      ko:'세 번째 규칙을 또박또박. 오늘 나라 이야기가 많이 나오니 미리 안전장치.' },
+    { t:'Warm-up', time:'4–8 min', say:[
+      ['Let\u2019s start with a quick question. Have you ever misunderstood someone from another culture? Or did someone misunderstand you?'],
+      ['Please tap one answer on your phone.'],
+      ['(After the votes) I see many \u201cyes\u201d answers. Let\u2019s hear two or three stories. Just one sentence each. Who wants to start?'],
+      ['Keep your story in your mind. We will come back to it in Round 1.']],
+      alt:'If nobody speaks: \u201cI will go first. In Thailand, I thought a man was lazy. Later I found out I was wrong. More about that in a minute.\u201d',
+      ko:'한 사람당 한 문장만. 길어지면 "Great, save the rest for Round 1!"' },
+    { t:'A small story: the internet guy', time:'8–12 min', say:[
+      ['Here is my story. It is short, about one minute. The voice will read it, so just watch.'],
+      ['(Press Play)'],
+      ['(After the video) So, seven days with no internet. And every day, \u201cTomorrow, krap.\u201d'],
+      ['At that time, I was really angry inside. Let\u2019s see what was really going on.']],
+      ko:'영상 전 Edge에서 소리 확인. 끝나면 바로 다음 슬라이드로.' },
+    { t:'What was really going on', time:'12–14 min', say:[
+      ['This was my rule: \u201cTomorrow\u201d means tomorrow. Fast is polite. Waiting is wasting.'],
+      ['This was his rule: \u201cTomorrow\u201d means soon. Calm is polite. Stress is rude.'],
+      ['So here is the key sentence for today. He wasn\u2019t lazy. I wasn\u2019t crazy. We were just following different rules.'],
+      ['That is our definition today. A cultural difference is when two people follow different hidden rules, and neither of them knows it.'],
+      ['Hidden rules. Please remember these two words. We will use them all day.']],
+      ko:'→ 키로 네 단계. 정의 문장은 천천히 두 번 읽어도 좋음.' },
+    { t:'Tool 1: The iceberg', time:'14–18 min', say:[
+      ['Now, two simple tools to understand hidden rules. The first one is the iceberg.'],
+      ['Above the water, we can see culture: food, language, clothes, greetings, holidays. These are easy to notice and easy to learn.'],
+      ['Under the water, we cannot see culture: how we treat time, when we speak up, how we give feedback, who decides, how we build trust, and what \u201cyes\u201d really means.'],
+      ['Nobody gets angry about pad thai. People get angry about a \u201cyes\u201d that didn\u2019t mean yes. That is under the water.'],
+      ['My internet guy was under the water too. It was about time and stress, not about Wi-Fi.'],
+      ['Quick check: which of these six have you bumped into at work? Just raise your hand.']],
+      ko:'손들기로 가볍게 참여. 1~2명 "which one?"만 묻고 넘어가기.' },
+    { t:'Tool 2: The five dials', time:'18–22 min', say:[
+      ['Tool number two. Under the water, culture turns five dials. Let\u2019s look at them one by one.'],
+      ['Dial one, speaking. On the left, say it directly, like the Netherlands: \u201cThis is wrong.\u201d On the right, read the air, like Japan. Korea is on the right. We have a special word for it: nunchi.'],
+      ['Dial two, feedback. Frank on the left, like Germany: \u201cThree problems with this.\u201d Softened on the right, like Thailand. Korea is on the right again.'],
+      ['Dial three, hierarchy. Flat on the left, like Sweden, where the boss is just \u201cAnna.\u201d Steep on the right, like Korea, where the boss is 팀장님.'],
+      ['Dial four, trust. On the left, trust comes from work, like the United States: \u201cShow me results.\u201d On the right, trust comes from meals and time together, like China and Korea. Think of 회식.'],
+      ['Dial five, time. By the clock on the left, like Germany. Flexible on the right, like Thailand. Korea is interesting here. We are fast, but our plans change fast too.'],
+      ['These are tendencies, not facts about any person. Every room, including this one, has people on both sides.'],
+      ['My Thai story was only dial five. The other four cause even more trouble at work. Let\u2019s test them on this room.']],
+      ko:'다이얼마다 한 줄씩. "Korea is on the right" 반복이 리듬을 만듦.' },
+    { t:'Game: Which one are you?', time:'22–30 min', say:[
+      ['Time for a game. Six situations, two choices. There is no right answer. I just want to see where this room splits.'],
+      ['I will read the situation. You vote on your phone. Then we look at the result together.']],
+      sub:[
+        ['Situation 1', 'From Monday, 팀장님 becomes \u201cDaniel.\u201d How do you feel? A: Still 팀장님 in my head. B: Daniel! Finally. Vote now.', 'If it splits: \u201cPerfect, the room is split. Someone from A, why? Someone from B, why?\u201d Then reveal: \u201cLG Uplus tried this. After five years, 38% still can\u2019t say 님 to everyone. A name tag does not change a culture overnight.\u201d'],
+        ['Situation 2', 'A colleague overseas asks, \u201cCan you finish this by Friday?\u201d You know it is impossible. A: \u201cYes, I\u2019ll try my best.\u201d B: \u201cNo, Friday is not possible.\u201d', 'Reveal: \u201cA soft yes protects the relationship today, and creates a surprise on Friday. A clear no feels rude today, and saves everyone next week.\u201d'],
+        ['Situation 3', 'The workshop is running 15 minutes over, but the discussion is great. A: Stop, people have plans. B: Let it run, this is gold.', 'Reveal: \u201cIn Thailand, mai pen rai, keep talking. In Germany, the schedule wins. Look at the data: Koreans still work about 100 hours more per year than the OECD average.\u201d'],
+        ['Situation 4', 'A foreign colleague says, in front of everyone, \u201cHonestly, your slides were confusing.\u201d A: Ouch, say it privately. B: Thank you, finally some honesty.', 'Reveal: \u201cIn the Netherlands or Germany, this is normal help. In Korea, Japan, or Thailand, it can feel like an attack. Same words, different weight.\u201d'],
+        ['Situation 5', 'After the workshop, the overseas host invites everyone for drinks. A: Go, relationships are built after hours. B: Go home, the workshop was the work.', 'Reveal: \u201cIn some cultures, trust is built over dinner. In others, trust is built over deadlines. Korea is on the dinner side. And 70% of Korean workers say 회식 is an extension of work.\u201d'],
+        ['Situation 6', 'During a group exercise, a junior colleague openly disagrees with your idea. A: Fine, but tell me privately first. B: Great, that\u2019s exactly what we want.', 'Reveal: \u201cHierarchy is a dial, not a rule. Korea is moving. But how fast? Ask the juniors in this room.\u201d If there is a generation gap: \u201cIs this culture, or generation?\u201d']],
+      ko:'상황당 약 1분 20초. 갈리면 양쪽에서 한 명씩. 시간이 없으면 1, 4, 6만.' },
+    { t:'Three rounds, one rhythm', time:'30–31 min', say:[
+      ['Now the main part: three discussion rounds. Each round works the same way.'],
+      ['Think: one minute alone. Vote on your phone and write one keyword.'],
+      ['Pair: two minutes with the person next to you. Practice in English before the stage.'],
+      ['Share: four minutes together. The tuk-tuk will pick a few people.'],
+      ['Round 1 is about you: your culture shock. Round 2 is about a team: who annoys you more. Round 3 is about our job: our first program for overseas colleagues.']],
+      ko:'세 라운드의 논리(나 → 팀 → HRD)를 한 문장으로.' },
+    { t:'Round 1: My culture shock', time:'31–38 min', say:[
+      ['Round 1. Please tell us about one moment when another culture surprised you. What did you think at first? And what did you learn later?'],
+      ['It can be abroad, with a foreign colleague, at another company, or even with another generation.'],
+      ['Use the four steps on the screen. One: the moment. Two: your first thought. Three: what you realized later. Four: which dial was it?'],
+      ['One minute to think. Then two minutes with your neighbor. (Start the timer.)'],
+      ['(Share) Who would like to share? \u2026 Thank you. Which dial was that? \u2026 Yes, dial three, hierarchy. Great.'],
+      ['Before we move on, a quick vote. In a meeting, you disagree with the most senior person. What do you usually do? Tap one.']],
+      alt:'My example: \u201cFor me, it was the internet guy. First I thought he was lazy. Later I realized it was about time, dial five. And I noticed nobody in Thailand ever raised their voice. So I also learned about dial one.\u201d',
+      ko:'공유 때 꼭 "Which dial was it?"를 물어 도구와 연결.' },
+    { t:'Round 2: Who annoys you more?', time:'38–45 min', say:[
+      ['Round 2. Imagine you are the leader of a global project team. Last week you shared your plan and asked for feedback.'],
+      ['Your colleague in Thailand smiled and said, \u201cYes, good plan!\u201d One week later, nothing was done.'],
+      ['Your colleague in Germany said, in front of everyone, \u201cThis plan has three problems.\u201d'],
+      ['Honestly, which one annoys you more? Please vote. And then tell us: as the leader, how would you solve it?'],
+      ['Use the three steps. One: your vote and why. Two: their hidden rule. Three: your solution.'],
+      ['(Share) \u2026 So your solution is to change yourself? Or to make a team rule? Or to ask them to change? All three are possible.'],
+      ['One more thing. We Koreans also say \u201cyes\u201d when we mean something else. \u201c검토해 보겠습니다.\u201d How would a German colleague read that?']],
+      ko:'해결책을 세 유형(나/팀 규칙/상대)으로 정리. 마지막에 우리도 고맥락임을 짚기.' },
+    { t:'Round 3: Our first overseas program', time:'45–52 min', say:[
+      ['Round 3 is about our job. Next year, our team builds its first training program for overseas colleagues. Can we just take the Korean program and send it?'],
+      ['First, a quick warm-up. Some Korean words do not translate. Look at these. How would you explain 패기 to a Thai colleague in one sentence? \u2026 Not easy, right?'],
+      ['Now we make four design decisions, one by one. Please vote each time, and we look at the result together.']],
+      sub:[
+        ['Decision 1: Content', 'Do overseas colleagues need the same competencies as our Korean colleagues? Same core and same program? Same core, different skills? Or different from the start? Vote now.', 'After: \u201cIf you chose different from the start, what part of SK still has to be in it? If you chose the same, who decides the core?\u201d'],
+        ['Decision 2: Language', 'All our materials are in Korean. What do we do? Translate what we have? Build new materials in English? Or a mix?', 'After: \u201cTranslation is cheap and fast. But 패기 and 눈치 do not translate. What happens to them?\u201d'],
+        ['Decision 3: Trainer', 'Who runs the sessions? A Korean trainer with an interpreter? A local trainer we train first? Or both together?', 'After: \u201cWith an interpreter, every sentence takes twice as long, and half the jokes die. A local trainer has to learn SK first. Which cost do we pay?\u201d'],
+        ['Decision 4: Obstacle', 'What will be the biggest obstacle? Language? Hierarchy and discussion style? Time zones? Or trust and relationships?', 'After: \u201cLook at the five dials again. Did we choose the dial we are weakest on, or the one that is easiest to blame?\u201d'],
+        ['Discussion', 'Now the question. Which decision was the hardest for you, and why? Your four choices are on your phone. One minute to think, two minutes in pairs.', 'Closing line for each speaker: \u201cSo the skill our team needs most is\u2026\u201d']],
+      ko:'단어 카드는 패기 하나만 해도 충분. 결정 1, 2에서 갈리면 이유 한두 명.' },
+    { t:'Your culture passport', time:'52–55 min', say:[
+      ['Now, your culture passport. This is based on your choices in the game and in Round 1. It is just for fun.'],
+      ['Thailand, kreng jai. Korea, nunchi. Sweden, lagom. The United States, straight talk. The Netherlands, Dutch directness.'],
+      ['Look at the room. We are not all the same. That is the point.'],
+      ['Let\u2019s hear from two people. First, our most direct passport: do you agree? And our most harmony-first passport: do you agree?'],
+      ['Please finish this sentence: \u201cWhen I work with people from \u2026, I\u2019ll remember that \u2026 is not rude. It\u2019s a different rule.\u201d']],
+      ko:'가장 적은 여권을 받은 사람부터. 문장 완성은 2~3명.' },
+    { t:'Three things to take home', time:'55–58 min', say:[
+      ['Three things to take home.'],
+      ['One. Different is not wrong. It is a different hidden rule. The internet guy wasn\u2019t lazy. The German colleague wasn\u2019t rude. Before judging the person, look for the rule.'],
+      ['Two. Look under the water. Check the five dials. When something feels off, ask yourself: which dial is this?'],
+      ['Three. A global program is not a translated program. Some words don\u2019t translate. Some skills aren\u2019t the same. Design for that from day one.'],
+      ['And for me, as a training designer: every program I design for overseas colleagues, I will ask, what in here does not translate?']],
+      ko:'각 항목을 오늘 참가자 발언과 연결하면 좋음. "Like Minsu said in Round 2…"' },
+    { t:'Thank you', time:'58–60 min', say:[
+      ['Khob khun krap. Thank you for riding the tuk-tuk with me today.'],
+      ['Next time a colleague seems too slow, too direct, or too quiet, take a breath. Mai pen rai. Then ask about the rule behind it.'],
+      ['Please tap an emoji on your way out. And see you next week!']],
+      ko:'여성 발표자는 "Khob khun kha". 다음 진행자 소개로 마무리.' }
+  ];
+  let idx = 0, following = true, live = false, lastT = 0, nav = null, scale = 1;
+  const main = $('#main');
+  function render(){
+    const s = S[idx]; if (!s) return;
+    $('#where').textContent = 'Slide ' + (idx+1) + ' of ' + S.length;
+    let h = '<h1>' + s.t + '</h1><p class="meta">' + s.time + '</p>';
+    s.say.forEach(p => { h += '<div class="block"><div class="say' + (p[0].startsWith('(') ? ' q' : '') + '">' + p[0] + '</div></div>'; });
+    if (s.alt) h += '<div class="block"><div class="lbl">If the room is quiet</div><div class="say alt">' + s.alt + '</div></div>';
+    if (s.sub){
+      const cur = idx === 7 ? (nav ? nav.sit : 0) : (nav ? (nav.slide === 11 ? nav.dec : 0) : 0);
+      s.sub.forEach((x, i) => {
+        const isCur = (idx === 7 && i === cur) || (idx === 11 && i === cur) || (idx === 11 && i === 4);
+        h += '<div class="sub" style="' + (live && !isCur ? 'opacity:.45' : '') + '"><h2>' + x[0] + (live && isCur && i < 4 ? ' \u2190 on screen now' : '') + '</h2><div class="say">' + x[1] + '</div><div class="say alt">' + x[2] + '</div></div>';
+      });
+    }
+    if (s.ko) h += '<div class="block" style="margin-top:14px"><div class="tip">' + s.ko + '</div></div>';
+    main.innerHTML = h; window.scrollTo(0, 0);
+  }
+  function setLive(on, txt){ live = on; const c = $('#live'); c.classList.toggle('live', on); $('#liveT').textContent = txt; }
+  async function poll(){
+    try{
+      const r = await fetch('/api/state?room=' + encodeURIComponent(ROOM), { cache:'no-store' });
+      const j = await r.json(); if (!j.ok){ setLive(false, 'Offline: use ← →'); return; }
+      const h = j.h || {}; let n = null; try{ n = JSON.parse(h.nav || 'null'); }catch(e){}
+      setLive(true, 'Live: following the presenter');
+      if (n && n.t !== lastT){ lastT = n.t; nav = n; if (following){ idx = Math.max(0, Math.min(S.length-1, n.slide || 0)); render(); } }
+    }catch(e){ setLive(false, 'Offline: use ← →'); }
+  }
+  $('#prev').addEventListener('click', () => { idx = Math.max(0, idx-1); render(); });
+  $('#next').addEventListener('click', () => { idx = Math.min(S.length-1, idx+1); render(); });
+  $('#follow').addEventListener('click', () => { following = !following; $('#follow').setAttribute('aria-pressed', following); $('#follow').textContent = following ? 'Following the screen \u2713' : 'Reading on my own'; if (following){ lastT = 0; poll(); } });
+  $('#bigger').addEventListener('click', () => { scale = scale >= 1.6 ? 1 : scale + .2; document.body.style.fontSize = (scale * 1.2) + 'rem'; });
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight'){ $('#next').click(); } if (e.key === 'ArrowLeft'){ $('#prev').click(); } });
+  render(); poll(); setInterval(poll, 2000);
+})();
+</script>
+</body>
+</html>
