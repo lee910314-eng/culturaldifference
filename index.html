@@ -590,6 +590,14 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
 .jchip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-radius:999px;background:var(--teal-soft);border:1.5px solid var(--teal);font-size:.85rem;font-weight:600}
 .jx{border:none;background:var(--surface);color:var(--ink);border-radius:50%;width:20px;height:20px;line-height:1;cursor:pointer;font-size:.9rem;padding:0}
 .jx:hover{background:var(--pink);color:#fff}
+
+/* v13 dials popup */
+#dialsDlg{width:min(900px,calc(100vw - 24px));max-height:88vh;overflow:auto}
+#dialsDlg .drow{grid-template-columns:110px 1fr}
+#dialsDlg .dname{font-size:1.05rem}
+#dialsDlg .dends{font-size:.9rem;margin-bottom:24px}
+#dialsDlg .dot2 span{font-size:.78rem}
+@media (max-width:640px){#dialsDlg .drow{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-mode="participant">
@@ -610,6 +618,7 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
       <button class="tool presenter-only" id="tTimer" aria-pressed="false" title="Timer (T)">Timer</button>
       <button class="tool presenter-only" id="tPick" title="Pick a speaker (P)">Pick a speaker</button>
       <button class="tool presenter-only" id="tReset" hidden title="Clear all live votes and ideas">Reset room</button>
+      <button class="tool" id="tDials" title="The five dials (D)">🎛️ Dials</button>
       <button class="tool" id="tFull" title="Full screen (F)">Full screen</button>
     </div>
   </header>
@@ -1016,6 +1025,12 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
   <div class="row"><input id="joinName" maxlength="30" placeholder="Your name" style="flex:1;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:10px 12px;background:var(--bg)"><button class="btn pink" id="joinGo">Join</button></div>
 </dialog>
 
+<dialog id="dialsDlg">
+  <div class="row" style="justify-content:space-between;margin-bottom:6px"><h3 style="margin:0">The five dials 🎛️</h3><button class="btn small" id="dialsClose">Close</button></div>
+  <p class="ko" style="margin-bottom:10px">A dial is like a volume knob: every culture sits somewhere between the two ends. The pink dot is where Korea usually sits.</p>
+  <div class="dials" id="dials2"></div>
+</dialog>
+
 <dialog id="videoDlg">
   <div class="vframe" id="vframe"></div>
   <div class="row" style="justify-content:space-between;margin-top:12px">
@@ -1194,6 +1209,7 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); next(); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
     else if (!PRESENTER) return;
+    else if (e.key === 'd' || e.key === 'D') window.toggleDials && window.toggleDials();
     else if (e.key === 'n' || e.key === 'N') toggleNotes();
     else if (e.key === 't' || e.key === 'T') toggleTimer();
     else if (e.key === 'p' || e.key === 'P') openPicker(false);
@@ -1715,15 +1731,24 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
       { n:'4. Trust', l:'Built through work 📋', r:'Built through meals 🍲', pts:[['United States',10],['Germany',18],['Japan',58],['Thailand',78],['China',90]], kr:70 },
       { n:'5. Time', l:'By the clock ⏰', r:'Flexible 🌊', pts:[['Germany',6],['Japan',12],['United States',26],['Thailand',84],['Mexico',92]], kr:40 }
     ];
-    const host = $('#dials'); if (!host) return;
+    function renderDials(host, stepped){
+    if (!host) return;
     dials.forEach(d => {
-      const row = document.createElement('div'); row.className = 'drow step';
+      const row = document.createElement('div'); row.className = 'drow' + (stepped ? ' step' : '');
       const dots = d.pts.map((p, i) => '<div class="dot2 ' + (i % 2 ? 'below' : 'above') + '" style="left:' + p[1] + '%"><i></i><span>' + p[0] + '</span></div>').join('');
       row.innerHTML = '<div class="dname">' + d.n + '</div>' +
         '<div class="dbody"><div class="dends"><span>' + d.l + '</span><span>' + d.r + '</span></div>' +
         '<div class="dline"><div class="dgrad"></div>' + dots + '<div class="dot2 kr" style="left:' + d.kr + '%"><i>🇰🇷</i><span>Korea</span></div></div></div>';
       host.appendChild(row);
     });
+    }
+    renderDials($('#dials'), true);
+    renderDials($('#dials2'), false);
+    const dd = $('#dialsDlg');
+    function toggleDials(){ if (dd.open) dd.close(); else { try{ dd.showModal(); }catch(e){ dd.setAttribute('open', ''); } } }
+    $('#tDials').addEventListener('click', toggleDials);
+    $('#dialsClose').addEventListener('click', () => dd.close());
+    window.toggleDials = toggleDials;
   })();
 
   /* =========== round 3: four design decisions =========== */
