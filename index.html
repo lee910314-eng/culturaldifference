@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mai Pen Rai vs. 빨리빨리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+Thai:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F3FF; --surface:#FFFFFF; --ink:#1E1A4D; --muted:#5F5A8C; --line:#DAD5F3;
+  --mango:#FFB21E; --pink:#F2357F; --teal:#0F8C76; --sky:#DCEBFF;
+  --pink-ink:#FFFFFF; --mango-soft:#FFF1D2; --teal-soft:#DDF4EE; --pink-soft:#FFE1EC;
+  --shadow:0 2px 0 var(--ink);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15122C; --surface:#211D40; --ink:#F1EEFF; --muted:#ABA6D2; --line:#38335F;
+    --mango:#FFC04A; --pink:#FF5A99; --teal:#3CC3A8; --sky:#26305A;
+    --mango-soft:#3A2F17; --teal-soft:#123A35; --pink-soft:#3D1A2D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15122C; --surface:#211D40; --ink:#F1EEFF; --muted:#ABA6D2; --line:#38335F;
+  --mango:#FFC04A; --pink:#FF5A99; --teal:#3CC3A8; --sky:#26305A;
+  --mango-soft:#3A2F17; --teal-soft:#123A35; --pink-soft:#3D1A2D;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  height:100%;margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans KR","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:clamp(15px,1.15vw,19px);line-height:1.55;overflow:hidden;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.display{font-family:"Bricolage Grotesque","Noto Sans KR",system-ui,sans-serif}
+.thai{font-family:"Noto Sans Thai","Noto Sans KR",sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--mango);outline-offset:3px;border-radius:8px}
+
+/* layout */
+.deck{height:100%;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(14px,3vw,32px);flex-wrap:wrap}
+.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.meta strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line);font-variant-numeric:tabular-nums}
+.chip.ok{border-color:var(--teal);color:var(--teal)}
+.chip.late{border-color:var(--pink);color:var(--pink)}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tool{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;cursor:pointer;font-size:.85rem}
+.tool:hover{border-color:var(--ink)}
+.tool[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.stage{flex:1;position:relative;overflow:hidden}
+.slide{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:12px clamp(18px,5vw,72px) 28px;
+  opacity:0;visibility:hidden;transform:translateX(48px);
+  transition:opacity .45s ease,transform .5s cubic-bezier(.2,.8,.2,1),visibility .45s;
+}
+.slide.past{transform:translateX(-48px)}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{max-width:1120px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,2.2vh,26px)}
+h1,h2,h3{font-family:"Bricolage Grotesque","Noto Sans KR",sans-serif;margin:0;line-height:1.02;letter-spacing:-.01em}
+h2{font-size:clamp(2rem,4.6vw,3.6rem);font-weight:800}
+h3{font-size:clamp(1.15rem,1.8vw,1.5rem);font-weight:700}
+p{margin:0;max-width:68ch}
+.lead{font-size:clamp(1.05rem,1.6vw,1.35rem);color:var(--muted)}
+.ko{color:var(--muted);font-size:.9em}
+.time-tag{font-size:.85rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.panel{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:18px 20px;box-shadow:4px 4px 0 var(--ink)}
+.panel.soft{border-color:var(--line);box-shadow:none}
+
+.btn{border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:9px 18px;cursor:pointer;font-weight:600;transition:transform .12s, box-shadow .12s;box-shadow:var(--shadow)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 3px 0 var(--ink)}
+.btn:active{transform:translateY(2px);box-shadow:0 0 0 var(--ink)}
+.btn.pink{background:var(--pink);color:var(--pink-ink)}
+.btn.teal{background:var(--teal);color:#fff}
+.btn.mango{background:var(--mango);color:#1E1A4D}
+.btn.small{padding:6px 12px;font-size:.85rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* title */
+.title-wrap{gap:clamp(10px,2vh,20px)}
+.title-slow{font-weight:300;letter-spacing:.22em;font-size:clamp(2.4rem,8vw,6.6rem);color:var(--teal);font-stretch:100%}
+.title-vs{font-size:clamp(1rem,1.8vw,1.4rem);color:var(--muted);font-family:"Bricolage Grotesque",sans-serif}
+.title-fast{font-family:"Noto Sans KR",sans-serif;font-weight:900;letter-spacing:-.06em;font-size:clamp(2.6rem,9vw,7.2rem);color:var(--pink);transform:skewX(-10deg);transform-origin:left;display:inline-block}
+.speedlines{display:inline-block;width:.9em;height:.5em;margin-right:.1em;background:repeating-linear-gradient(to bottom,var(--pink) 0 3px,transparent 3px 9px);vertical-align:middle;opacity:.6}
+.subtitle{font-size:clamp(1.2rem,2.4vw,2rem);font-family:"Bricolage Grotesque",sans-serif;font-weight:500}
+.byline{color:var(--muted)}
+.byline [contenteditable]{color:var(--ink);font-weight:700;border-bottom:2px dashed var(--line);padding:0 4px;min-width:6ch;display:inline-block}
+.byline [contenteditable]:empty::before{content:"your name";color:var(--muted);font-weight:400}
+
+/* route */
+.route{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.route li{display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:12px 16px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line)}
+.route .min{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.route .em{font-size:1.4rem}
+.rules{display:grid;gap:8px}
+.rules div{display:flex;gap:10px;align-items:flex-start}
+
+/* warm-up */
+.speeds{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.speed{border:2px solid var(--ink);border-radius:18px;background:var(--surface);padding:16px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;box-shadow:4px 4px 0 var(--ink);transition:transform .12s}
+.speed:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.speed .big{font-size:2.4rem;line-height:1}
+.speed .name{font-weight:700}
+.speed .bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.speed .bar i{display:block;height:100%;width:0;background:var(--mango);transition:width .4s}
+.speed .count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem}
+
+/* story */
+.chat{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.bubble{padding:12px 16px;border-radius:18px;max-width:85%;border:2px solid var(--ink);background:var(--surface)}
+.bubble.me{align-self:flex-end;background:var(--sky);border-bottom-right-radius:4px}
+.bubble.th{align-self:flex-start;background:var(--teal-soft);border-bottom-left-radius:4px}
+.bubble.narr{align-self:center;border:none;background:none;color:var(--muted);font-style:italic;text-align:center}
+.who{display:block;font-size:.75rem;color:var(--muted);margin-bottom:2px}
+.step{opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s;pointer-events:none}
+.step.shown{opacity:1;transform:none;pointer-events:auto}
+.scream{font-family:"Noto Sans KR",sans-serif;font-weight:700;font-size:clamp(1.6rem,3.5vw,2.6rem);color:var(--pink);align-self:center;border:none;background:none}
+.scream.shown{animation:shake .5s 2}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px) rotate(-2deg)}40%{transform:translateX(8px) rotate(2deg)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.hint{font-size:.85rem;color:var(--muted)}
+kbd{font-family:inherit;font-size:.8em;border:1.5px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:0 6px;background:var(--surface)}
+
+/* lesson */
+.quote{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.5rem,3.4vw,2.6rem);font-weight:600;line-height:1.15;max-width:24ch}
+
+/* flip cards */
+.flip{perspective:1200px;cursor:pointer;min-height:300px;border:none;background:none;padding:0;text-align:left}
+.flip-in{position:relative;width:100%;height:100%;min-height:300px;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--ink);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px;box-shadow:5px 5px 0 var(--ink)}
+.face.front{justify-content:center;align-items:flex-start}
+.face.back{transform:rotateY(180deg);background:var(--surface)}
+.flip.slow .front{background:var(--teal-soft)}
+.flip.fast .front{background:var(--pink-soft)}
+.word{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:800;line-height:1}
+.flip.slow .word{color:var(--teal);font-weight:300;letter-spacing:.12em}
+.flip.fast .word{color:var(--pink);font-family:"Noto Sans KR",sans-serif;font-weight:900;letter-spacing:-.04em;transform:skewX(-8deg);display:inline-block}
+.face ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+
+/* game */
+.game{display:grid;gap:16px}
+.sit{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.4rem,3vw,2.3rem);font-weight:700;line-height:1.15;min-height:2.4em}
+.votes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vote{border:2px solid var(--ink);border-radius:16px;padding:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;box-shadow:4px 4px 0 var(--ink);font-size:1.05rem}
+.vote.slow{background:var(--teal-soft)}
+.vote.fast{background:var(--pink-soft)}
+.vote .n{font-family:"Bricolage Grotesque",sans-serif;font-size:2rem;font-variant-numeric:tabular-nums}
+.vote:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.take{min-height:3.2em;padding:14px 18px;border-radius:14px;background:var(--mango-soft);border:2px solid var(--mango);opacity:0;transition:opacity .3s}
+.take.on{opacity:1}
+.dots{display:flex;gap:6px}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots span.on{background:var(--ink)}
+
+/* data */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.stat{padding:20px;border-radius:18px;background:var(--surface);border:2px solid var(--ink);display:flex;flex-direction:column;gap:8px}
+.stat .n{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(3rem,6vw,4.6rem);font-weight:800;line-height:.95;font-variant-numeric:tabular-nums}
+.stat:nth-child(1) .n{color:var(--pink)}
+.stat:nth-child(2) .n{color:var(--mango)}
+.stat:nth-child(3) .n{color:var(--teal)}
+.vsn{font-size:.5em;color:var(--muted);font-weight:500}
+.src{font-size:.75rem;color:var(--muted)}
+.punch{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.4rem,2.8vw,2.2rem);font-weight:700}
+
+/* discussion */
+.format{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.format .panel{display:flex;flex-direction:column;gap:6px}
+.format .m{font-family:"Bricolage Grotesque",sans-serif;font-size:2.4rem;font-weight:800;line-height:1}
+.qtag{display:inline-block;padding:4px 12px;border-radius:999px;border:2px solid var(--ink);font-weight:700;font-size:.85rem;align-self:flex-start}
+.qtag.me{background:var(--sky)}
+.qtag.org{background:var(--mango-soft)}
+.qtag.hrd{background:var(--teal-soft)}
+.question{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.7rem,3.6vw,3rem);font-weight:700;line-height:1.08;max-width:22ch}
+.phrases{display:flex;flex-wrap:wrap;gap:8px}
+.phrases span{padding:6px 12px;border-radius:10px;background:var(--surface);border:1.5px solid var(--line);font-size:.92rem}
+.follow{border-left:4px solid var(--mango);padding-left:14px}
+
+/* speedometer */
+.gauge-wrap{display:grid;grid-template-columns:minmax(260px,1.1fr) 1fr;gap:22px;align-items:center}
+@media (max-width:760px){.gauge-wrap{grid-template-columns:1fr}}
+.gauge svg{width:100%;height:auto;max-width:460px;display:block;margin:0 auto}
+.needle{transform-origin:200px 200px;transition:transform 1s cubic-bezier(.3,1.5,.5,1)}
+.gvotes{display:grid;gap:10px}
+.gv{display:flex;justify-content:space-between;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);font-weight:700;box-shadow:3px 3px 0 var(--ink)}
+.gv .n{font-family:"Bricolage Grotesque",sans-serif;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.gv:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.verdict{font-weight:700;min-height:1.6em}
+
+/* balance */
+.scale{position:relative;height:250px;max-width:760px;width:100%;margin:0 auto}
+.post{position:absolute;left:50%;bottom:0;width:10px;height:180px;margin-left:-5px;background:var(--ink);border-radius:6px}
+.base{position:absolute;left:50%;bottom:0;width:140px;height:14px;margin-left:-70px;background:var(--ink);border-radius:8px}
+.beam{position:absolute;left:10%;right:10%;top:62px;height:10px;background:var(--ink);border-radius:6px;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
+.pan{position:absolute;top:72px;width:36%;min-height:90px;border:2px solid var(--ink);border-radius:0 0 40px 40px;padding:8px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;transition:transform .8s cubic-bezier(.3,1.4,.5,1);overflow:hidden;max-height:170px}
+.pan.l{left:2%;background:var(--pink-soft)}
+.pan.r{right:2%;background:var(--teal-soft)}
+.pan span{font-size:.78rem;padding:3px 8px;border-radius:8px;background:var(--surface);border:1.5px solid var(--ink);animation:drop .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes drop{from{transform:translateY(-30px);opacity:0}to{transform:none;opacity:1}}
+.adders{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.adders{grid-template-columns:1fr}}
+.adder{display:flex;flex-direction:column;gap:6px}
+.adder label{font-weight:700}
+.adder .row input{flex:1;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:8px 12px;background:var(--surface)}
+.balance-status{text-align:center;font-weight:700;min-height:1.6em}
+
+/* mix */
+.mix{display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+.mix .em{font-size:clamp(4rem,10vw,7rem);line-height:1;transition:transform .3s}
+.mix .label{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.5rem,3vw,2.4rem);font-weight:800}
+.mix input[type=range]{width:min(640px,100%);accent-color:var(--pink);height:28px}
+.ends{display:flex;justify-content:space-between;width:min(640px,100%);color:var(--muted);font-size:.9rem}
+.sentence{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.2rem,2.4vw,1.8rem);font-weight:600;padding:16px 20px;border:2px dashed var(--ink);border-radius:16px;background:var(--surface)}
+.sentence u{text-decoration:none;border-bottom:3px solid var(--mango);padding:0 1.5em}
+
+/* takeaways */
+.takes{display:grid;gap:14px}
+.takes .step{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline;padding:16px 20px;border-radius:16px;background:var(--surface);border:2px solid var(--ink)}
+.takes .k{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.8rem;color:var(--pink)}
+.takes p{font-size:clamp(1.1rem,2vw,1.5rem);font-weight:600}
+
+/* closing */
+.thanks{font-size:clamp(3rem,9vw,7rem);font-weight:800;line-height:1}
+.reactions{display:flex;gap:10px;flex-wrap:wrap}
+.react{font-size:2rem;border:2px solid var(--ink);border-radius:16px;background:var(--surface);width:64px;height:64px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.react:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.react-count{font-variant-numeric:tabular-nums;color:var(--muted)}
+
+/* road */
+.roadbar{position:relative;padding:6px clamp(14px,3vw,32px) 10px;display:flex;align-items:center;gap:12px}
+.navbtn{border:2px solid var(--ink);background:var(--surface);border-radius:12px;width:44px;height:40px;cursor:pointer;font-size:1.1rem;flex:none}
+.road{position:relative;flex:1;height:44px}
+.asphalt{position:absolute;left:0;right:0;top:20px;height:6px;border-radius:4px;background:var(--line)}
+.asphalt::after{content:"";position:absolute;inset:2px 0;background:repeating-linear-gradient(to right,var(--bg) 0 10px,transparent 10px 22px);opacity:.8}
+.done{position:absolute;left:0;top:20px;height:6px;border-radius:4px;background:var(--mango);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.stop{position:absolute;top:15px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--surface);border:2.5px solid var(--ink);cursor:pointer;padding:0}
+.stop.passed{background:var(--mango)}
+.stop .lbl{position:absolute;top:18px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.68rem;color:var(--muted)}
+@media (max-width:820px){.stop .lbl{display:none}}
+.tuktuk{position:absolute;top:-6px;font-size:30px;margin-left:-18px;transition:left .8s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.tuktuk span{display:inline-block;transform:scaleX(-1)}
+.tuktuk.bump span{animation:bump .5s}
+@keyframes bump{0%,100%{transform:scaleX(-1) translateY(0)}30%{transform:scaleX(-1) translateY(-6px) rotate(4deg)}60%{transform:scaleX(-1) translateY(0) rotate(-3deg)}}
+
+/* floating panels */
+.drawer{position:fixed;z-index:30;background:var(--surface);border:2px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink);padding:16px 18px;display:none}
+.drawer.open{display:block}
+.notes{left:clamp(10px,2vw,24px);bottom:calc(80px + env(safe-area-inset-bottom,0px));width:min(520px,calc(100vw - 20px));max-height:55vh;overflow:auto}
+.notes h4{margin:0 0 8px;font-family:"Bricolage Grotesque",sans-serif;font-size:1.05rem}
+.notes .body{font-size:.9rem;display:grid;gap:8px}
+.notes .body p{max-width:none}
+.notes .say{background:var(--mango-soft);border-radius:10px;padding:8px 10px}
+.timer{right:clamp(10px,2vw,24px);bottom:calc(80px + env(safe-area-inset-bottom,0px));width:260px;text-align:center}
+.ring{position:relative;width:150px;height:150px;margin:0 auto 10px}
+.ring svg{transform:rotate(-90deg)}
+.ring .t{position:absolute;inset:0;display:grid;place-items:center;font-family:"Bricolage Grotesque",sans-serif;font-size:2.3rem;font-weight:800;font-variant-numeric:tabular-nums}
+.timer.done .ring .t{color:var(--pink);animation:shake .5s 3}
+.presets{display:flex;gap:6px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.mini-timer{display:none}
+.timer-running .mini-timer{display:inline-flex}
+
+dialog{border:2px solid var(--ink);border-radius:20px;box-shadow:8px 8px 0 var(--ink);background:var(--surface);color:var(--ink);padding:22px;width:min(560px,calc(100vw - 24px))}
+dialog::backdrop{background:rgba(20,16,50,.45)}
+dialog textarea{width:100%;min-height:110px;border:2px solid var(--line);border-radius:12px;padding:10px;background:var(--bg)}
+.picked{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;text-align:center;min-height:1.3em;margin:10px 0;color:var(--pink)}
+.picked.rolling{color:var(--muted)}
+.namechips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.namechips span{font-size:.8rem;padding:2px 10px;border-radius:999px;border:1.5px solid var(--line)}
+.namechips span.used{background:var(--teal-soft);border-color:var(--teal);text-decoration:line-through;color:var(--muted)}
+
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.floaty{position:absolute;font-size:2.4rem}
+
+/* modes */
+body[data-mode="participant"] .presenter-only{display:none!important}
+body:not([data-mode="participant"]) .participant-only{display:none!important}
+.watch{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.watchlink{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font-weight:700;text-decoration:none;box-shadow:var(--shadow)}
+.watchlink:hover{background:var(--pink-soft)}
+.watchlink b{color:#E62117}
+.style-card p{font-size:1.05rem}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media (max-width:640px){
+  .route li{grid-template-columns:54px 1fr}
+  .route li .em{display:none}
+  .votes{grid-template-columns:1fr}
+}
+
+/* live */
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.chip.live .live-dot{background:var(--teal);box-shadow:0 0 0 0 var(--teal);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(15,140,118,.5)}100%{box-shadow:0 0 0 8px rgba(15,140,118,0)}}
+button.chip{cursor:pointer;font:inherit;color:inherit}
+body[data-mode="participant"].is-live .host-ctl{display:none!important}
+.mine{outline:3px solid var(--mango);outline-offset:3px}
+.joinbox{display:flex;gap:16px;align-items:center;padding:14px 16px;border:2px dashed var(--ink);border-radius:16px;background:var(--surface);align-self:flex-start}
+.joinbox #qr img,.joinbox #qr canvas{display:block;width:120px;height:120px;background:#fff;padding:6px;border-radius:8px}
+.joinurl{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.3rem;word-break:break-all}
+
+/* video buttons and modal */
+.videobtn{display:inline-flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--ink);background:var(--surface);border-radius:16px;padding:10px 16px 10px 10px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);max-width:100%}
+.videobtn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.videobtn .vplay{flex:none;width:46px;height:46px;border-radius:12px;background:#E62117;color:#fff;display:grid;place-items:center;font-size:1.1rem}
+.videobtn small{display:block;color:var(--muted);font-size:.78rem;font-weight:400}
+.videobtn b{display:block}
+.videobtn.big{padding:14px 22px 14px 14px}
+.videobtn.big .vplay{width:64px;height:64px;font-size:1.5rem}
+.videobtn.big b{font-size:1.2rem}
+#videoDlg{width:auto;max-width:calc(100vw - 24px);padding:16px}
+.vframe{height:min(74vh,720px);aspect-ratio:9/16;max-width:calc(100vw - 60px);background:#000;border-radius:14px;overflow:hidden}
+.vframe iframe{width:100%;height:100%;border:0;display:block}
+
+/* film */
+.film{width:min(100%,calc(54vh * 16 / 9));margin:0 auto}
+.film-stage{position:relative;aspect-ratio:16/9;width:100%;border:2px solid var(--ink);border-radius:20px;overflow:hidden;background:linear-gradient(var(--sky),var(--bg));box-shadow:6px 6px 0 var(--ink);container-type:inline-size}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.scene.on{opacity:1}
+.skyline{position:absolute;left:0;right:0;bottom:0;height:46%;display:flex;align-items:flex-end;gap:2%;padding:0 4%}
+.skyline i{flex:1;background:var(--ink);opacity:.14;border-radius:4px 4px 0 0}
+.sun{position:absolute;right:10%;top:10%;width:11cqw;height:11cqw;border-radius:50%;background:var(--mango)}
+.f-me{position:absolute;left:12%;bottom:16%;font-size:15cqw;line-height:1}
+.f-sign{position:absolute;left:40%;bottom:40%;font:800 4.4cqw "Bricolage Grotesque",sans-serif;background:var(--pink);color:#fff;padding:1cqw 2.6cqw;border-radius:2cqw;transform:scale(0) rotate(-6deg);transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.f-sign.on{transform:scale(1) rotate(-6deg)}
+.f-left,.f-right{position:absolute;bottom:16%;font-size:14cqw;line-height:1}
+.f-left{left:8%}.f-right{right:8%}
+.f-left span,.f-right span{font-size:6cqw}
+.scene.on .f-left span,.scene.on .f-right span{display:inline-block;animation:ring .3s 4}
+@keyframes ring{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+.f-bub{position:absolute;max-width:46%;padding:1.5cqw 2.4cqw;border:2px solid var(--ink);border-radius:2.5cqw;font-size:3.2cqw;font-weight:700;line-height:1.25;background:var(--surface);color:var(--ink);opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s}
+.f-bub.l{left:5%;top:7%;background:var(--sky);border-bottom-left-radius:0}
+.f-bub.r{right:5%;top:30%;background:var(--teal-soft);border-bottom-right-radius:0}
+.f-bub.on{opacity:1;transform:none}
+.f-cal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:38cqw;background:var(--surface);border:2px solid var(--ink);border-radius:2cqw;overflow:hidden;text-align:center;perspective:400px}
+.f-cal-top{background:var(--pink);color:#fff;font-size:2.4cqw;padding:1cqw;font-weight:700}
+.f-cal-day{font:800 9cqw "Bricolage Grotesque",sans-serif;padding:1.6cqw;line-height:1.1}
+.f-cal-day b{display:inline-block}
+.f-cal-day b.flip{animation:calflip .45s}
+@keyframes calflip{from{transform:rotateX(90deg)}to{transform:none}}
+.f-clock{position:absolute;right:11%;top:14%;font-size:9cqw}
+.scene.on .f-clock{animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.f-face{position:absolute;left:12%;bottom:18%;font-size:19cqw;line-height:1}
+.f-think{position:absolute;right:7%;top:8%;width:48%;aspect-ratio:1.55;background:var(--surface);border:2px solid var(--ink);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.f-think::after{content:"";position:absolute;left:-6%;bottom:2%;width:5cqw;height:5cqw;border-radius:50%;border:2px solid var(--ink);background:var(--surface)}
+.f-volc{font-size:10cqw;line-height:1}
+.f-scream{font:900 5cqw "Noto Sans KR",sans-serif;color:var(--pink)}
+.scene.on .f-think{animation:shake .5s .7s 3}
+.f-door{position:absolute;left:26%;bottom:14%;font-size:24cqw;line-height:1}
+.f-tech{position:absolute;right:-35%;bottom:16%;font-size:13cqw;line-height:1;transition:right 1.1s cubic-bezier(.2,.8,.2,1)}
+.scene.on .f-tech{right:12%}
+.f-hello{right:6%;top:10%}
+.f-wifi{position:absolute;right:12%;top:10%;width:32cqw}
+.wb{opacity:.15;fill:none;stroke:var(--teal);stroke-width:7;stroke-linecap:round}
+.wb.w0{fill:var(--teal);stroke:none}
+.scene.on .wb{animation:wfill .35s forwards}
+.scene.on .w0{animation-delay:.2s}.scene.on .w1{animation-delay:.6s}.scene.on .w2{animation-delay:1s}.scene.on .w3{animation-delay:1.4s}
+@keyframes wfill{to{opacity:1}}
+.f-me2{position:absolute;left:16%;bottom:16%;font-size:16cqw;line-height:1}
+.f-small{position:absolute;left:36%;bottom:44%;font:700 3.4cqw "Bricolage Grotesque",sans-serif;background:var(--surface);border:2px solid var(--ink);padding:1cqw 2cqw;border-radius:2cqw}
+.f-endtxt{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font:800 8cqw "Bricolage Grotesque",sans-serif;line-height:1.05;padding:0 6%}
+.f-endtxt span{font-size:3.4cqw;font-weight:500;display:block;color:var(--muted);margin-top:2cqw}
+.f-cap{position:absolute;left:50%;bottom:3.5%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.9cqw 2.6cqw;border-radius:999px;font-size:2.9cqw;font-weight:700;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .3s}
+.f-cap.on{opacity:1}
+.f-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:2px solid var(--ink);background:var(--pink);color:#fff;font:800 3.4cqw "Bricolage Grotesque",sans-serif;padding:1.6cqw 3.6cqw;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink);z-index:3}
+.f-bar{height:6px;background:var(--line);border-radius:4px;margin-top:12px;overflow:hidden}
+.f-bar i{display:block;height:100%;width:0;background:var(--pink)}
+
+/* game split */
+.split{display:flex;height:16px;border-radius:999px;overflow:hidden;border:2px solid var(--ink);background:var(--line)}
+.split i{display:block;height:100%;transition:width .5s}
+.split .s1{background:var(--teal)}.split .s2{background:var(--pink)}
+.heat{font-weight:700;min-height:1.5em}
+
+/* round 1 style cards as buttons */
+button.style-card{text-align:left;cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:6px}
+button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.style-card .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.6rem}
+
+/* gauge cards (round 2) */
+.gv small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+
+/* examples (round 3) */
+.examples{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.examples{grid-template-columns:1fr}}
+.exlist{display:flex;flex-wrap:wrap;gap:6px}
+.ex{border:1.5px solid var(--ink);border-radius:10px;padding:6px 10px;cursor:pointer;font-size:.85rem;text-align:left;line-height:1.3}
+.ex.l{background:var(--pink-soft)}.ex.r{background:var(--teal-soft)}
+.ex:hover{transform:translateY(-1px)}
+.ex.used{opacity:.45}
+.scale{height:220px}
+.post{height:160px}
+
+/* mix */
+.mixgrid{display:grid;grid-template-columns:1fr 1.2fr;gap:22px;align-items:center}
+@media (max-width:820px){.mixgrid{grid-template-columns:1fr}}
+.breakdown{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.breakdown span{font-size:.82rem;padding:4px 10px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line)}
+.track-wrap{display:flex;flex-direction:column;gap:8px}
+.track{position:relative;height:150px;border-radius:16px;background:linear-gradient(90deg,var(--teal-soft),var(--mango-soft),var(--pink-soft));border:2px solid var(--ink);overflow:hidden}
+.track .dot{position:absolute;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:2px;transition:left .6s cubic-bezier(.2,.8,.2,1);font-size:.72rem;font-weight:700;white-space:nowrap}
+.track .dot i{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--surface)}
+.track .avg{position:absolute;top:0;bottom:0;width:3px;background:var(--pink);transition:left .6s}
+.track .avg span{position:absolute;bottom:4px;left:6px;font-size:.75rem;font-weight:800;color:var(--pink);white-space:nowrap}
+
+/* takeaways */
+.takes .step{grid-template-columns:auto 1fr}
+.takes .step div{display:flex;flex-direction:column;gap:4px}
+.takes .step small{font-size:clamp(.9rem,1.25vw,1.05rem);color:var(--muted);font-weight:400;line-height:1.5}
+
+/* world tour */
+.tour{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:980px){.tour{grid-template-columns:1fr}}
+.team h3{margin-bottom:8px;font-size:1.1rem}
+.pcards{display:grid;gap:8px}
+.pcard{border:2px solid var(--ink);border-radius:14px;padding:10px 14px;text-align:left;cursor:pointer;min-height:62px;box-shadow:3px 3px 0 var(--ink);display:flex;flex-direction:column;gap:2px;color:var(--ink);font:inherit}
+.pcard:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.team.relaxed .pcard{background:var(--teal-soft)}
+.team.fast .pcard{background:var(--pink-soft)}
+.team.steady .pcard{background:var(--mango-soft)}
+.pcard .ph{font-family:"Bricolage Grotesque","Noto Sans KR",sans-serif;font-weight:800;font-size:1.15rem;line-height:1.15}
+.pcard .q{font-size:.78rem;color:var(--muted)}
+.pcard .ans{display:none;font-size:.88rem;line-height:1.4}
+.pcard.on .q{display:none}
+.pcard.on .ans{display:block;animation:drop .4s cubic-bezier(.3,1.5,.5,1)}
+
+/* time map */
+.map-wrap{position:relative;padding-left:34px}
+.axis-y{position:absolute;left:0;top:0;bottom:34px;width:26px;display:flex;flex-direction:column-reverse;justify-content:space-between;align-items:center}
+.axis-y span{writing-mode:vertical-rl;transform:rotate(180deg);font-weight:700;color:var(--muted);font-size:.85rem;white-space:nowrap}
+.axis-y::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--line);z-index:-1}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qd{border:2px solid var(--ink);border-radius:16px;padding:14px 16px;min-height:120px;display:flex;flex-direction:column;gap:4px}
+.qd .flags{font-size:1.7rem;line-height:1.2}
+.qd p{font-size:.95rem}
+.qd.tl{background:var(--mango-soft)}.qd.tr{background:var(--sky)}.qd.bl{background:var(--teal-soft)}.qd.br{background:var(--pink-soft)}
+.axis-x{display:flex;justify-content:space-between;font-weight:700;color:var(--muted);font-size:.85rem;margin-top:8px;padding:0 4px}
+
+/* v6: cultural difference */
+.big-title{font-size:clamp(3.4rem,11vw,9rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--ink)}
+.big-title::after{content:"";display:block;width:1.6em;height:.14em;background:var(--pink);margin-top:.18em;border-radius:4px}
+.defn{font-family:"Bricolage Grotesque","Noto Sans KR",sans-serif;font-size:clamp(1.15rem,2.2vw,1.6rem);font-weight:600;line-height:1.3;margin:6px 0 4px}
+.iceberg{position:relative;border:2px solid var(--ink);border-radius:20px;overflow:hidden;box-shadow:5px 5px 0 var(--ink)}
+.ice-top{background:var(--sky);padding:16px 18px 14px}
+.ice-bottom{background:var(--teal-soft);padding:14px 18px 18px}
+.ice-label{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:8px}
+.waterline{position:relative;height:0;border-top:3px dashed var(--teal)}
+.waterline span{position:absolute;right:12px;top:-11px;font-size:.72rem;background:var(--surface);padding:1px 8px;border-radius:999px;border:1.5px solid var(--teal);color:var(--teal)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{padding:7px 12px;border-radius:12px;background:var(--surface);border:2px solid var(--ink);font-weight:600;font-size:.95rem}
+.ice-bottom .chips span{background:var(--surface)}
+.dialtag{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--mango-soft);border:1.5px solid var(--mango)}
+.rounds-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.rm{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface)}
+.rm b{font-size:1.05rem}
+.rm small{color:var(--muted)}
+.dial .dl b{display:block;color:var(--ink)}
+.style-card .n{align-self:flex-end}
+
+/* v7 */
+.fact{border:2px solid var(--line);border-radius:14px;padding:12px 16px;background:var(--surface);display:grid;gap:8px}
+.fact-title{font-weight:700}
+.fbars{display:grid;gap:6px}
+.fbar{display:grid;grid-template-columns:minmax(150px,1.3fr) 2fr 70px;gap:10px;align-items:center;font-size:.9rem}
+.fbar .ft{height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.fbar .ft i{display:block;height:100%;background:var(--teal);border-radius:6px;transition:width .6s}
+.fbar.kr .ft i{background:var(--pink)}
+.fbar.kr .fl{font-weight:800}
+.fbar .fv{font-variant-numeric:tabular-nums;text-align:right;font-weight:700}
+.rank{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:600;font-size:.92rem}
+.rank span{padding:4px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg)}
+.rank span.kr{background:var(--pink-soft);border-color:var(--pink);font-weight:800}
+.rank i{color:var(--muted);font-style:normal}
+.fact-src{font-size:.75rem;color:var(--muted)}
+@media (max-width:640px){.fbar{grid-template-columns:1fr 60px}.fbar .ft{grid-column:1/-1;order:3}}
+
+/* dial diagram */
+.drow{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;padding:6px 0}
+.dname{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.05rem}
+.dends{display:flex;justify-content:space-between;font-weight:700;font-size:.9rem;margin-bottom:26px}
+.dline{position:relative;height:10px;margin:0 8px 30px}
+.dgrad{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,var(--pink-soft),var(--line),var(--teal-soft));border:1.5px solid var(--line)}
+.dot2{position:absolute;left:0;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center}
+.dot2 i{display:block;width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--surface);font-style:normal}
+.dot2 span{position:absolute;white-space:nowrap;font-size:.74rem;color:var(--muted);font-weight:600}
+.dot2.above span{bottom:14px}
+.dot2.below span{top:14px}
+.dot2.kr i{width:30px;height:30px;background:var(--pink);border:2.5px solid var(--ink);display:grid;place-items:center;font-size:.95rem;box-shadow:2px 2px 0 var(--ink)}
+.dot2.kr span{top:19px;color:var(--pink);font-weight:800;font-size:.8rem}
+@media (max-width:760px){.drow{grid-template-columns:1fr}.dline{margin-bottom:34px}}
+
+/* round 1 recipe & quick vote */
+.recipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.recipe span{padding:8px 12px;border-radius:10px;background:var(--bg);border:1.5px solid var(--line);font-size:.92rem}
+.quickvote{border:1.5px dashed var(--line);border-radius:14px;padding:10px 14px}
+.quickvote summary{cursor:pointer;font-weight:700;color:var(--muted)}
+
+/* removable ideas */
+.pan span.rm{cursor:pointer;padding-right:18px;position:relative}
+.pan span.rm::after{content:"×";position:absolute;right:6px;top:1px;color:var(--muted);font-weight:700}
+.pan span.rm:hover{background:var(--pink-soft)}
+
+/* passport tally */
+.tally{display:grid;gap:8px}
+.trow{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);align-items:center;opacity:.6}
+.trow.has{opacity:1;border-color:var(--ink)}
+.trow .tem{font-size:1.5rem;grid-row:span 2}
+.trow .tname{font-weight:800}
+.trow .tbar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.trow .tbar i{display:block;height:100%;background:var(--pink);transition:width .6s}
+.trow .tnum{font-size:.85rem;color:var(--muted);grid-column:2}
+.trow .tnames{font-size:.8rem;grid-column:2;color:var(--ink)}
+
+/* v8 */
+.vsel{font:inherit;font-size:.85rem;border:2px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--surface);color:var(--ink);max-width:260px}
+.f-bub.speaking{box-shadow:0 0 0 3px var(--mango)}
+.quickvote{border:1.5px dashed var(--line);border-radius:14px;padding:12px 14px}
+.qv-title{font-weight:700;color:var(--muted)}
+.story{display:grid;gap:12px}
+.story-line{font-size:clamp(1.05rem,1.7vw,1.3rem)}
+.tune{font-size:.8rem;color:var(--muted);min-height:1.2em;margin:4px 0 6px}
+
+/* v9: bigger tool text, rule chips */
+.chips span{font-size:1.1rem;padding:9px 14px}
+.ice-label{font-size:1.25rem}
+.dname{font-size:1.25rem}
+.dends{font-size:1.05rem;margin-bottom:30px}
+.dot2 span{font-size:.92rem}
+.dot2.kr span{font-size:1rem;top:21px}
+.dline{margin-bottom:36px}
+.rulelist .ex{background:var(--surface);font-size:.95rem;padding:8px 12px}
+.ex.rule.as-l{background:var(--pink-soft);border-color:var(--pink)}
+.ex.rule.as-l::before{content:"📘 "}
+.ex.rule.as-r{background:var(--teal-soft);border-color:var(--teal)}
+.ex.rule.as-r::before{content:"🧹 "}
+.panlabels{display:flex;justify-content:space-between;font-weight:700;padding:0 4%}
+
+/* v10: round 3 decisions */
+.wcard{border:2px solid var(--ink);border-radius:14px;padding:10px 14px;text-align:left;cursor:pointer;background:var(--mango-soft);display:flex;flex-direction:column;gap:3px;box-shadow:3px 3px 0 var(--ink);max-width:100%;color:var(--ink);font:inherit}
+.wcard b{font-size:1.2rem}
+.wcard .w-hint{font-size:.8rem;color:var(--muted)}
+.wcard .w-ans{display:none;font-size:.9rem;line-height:1.35;max-width:36ch}
+.wcard.on{background:var(--surface)}
+.wcard.on .w-hint{display:none}
+.wcard.on .w-ans{display:block;animation:drop .4s cubic-bezier(.3,1.5,.5,1)}
+.dopts{display:grid;gap:8px}
+.dopt{display:grid;grid-template-columns:minmax(160px,1.4fr) 2fr 90px;gap:12px;align-items:center;border:2px solid var(--ink);border-radius:14px;padding:10px 14px;background:var(--surface);cursor:pointer;text-align:left;box-shadow:3px 3px 0 var(--ink);font:inherit;color:var(--ink)}
+.dopt:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.dopt .dl2{font-weight:700}
+.dopt .dbar{height:14px;border-radius:7px;background:var(--line);overflow:hidden}
+.dopt .dbar i{display:block;height:100%;background:var(--teal);transition:width .5s}
+.dopt.win{background:var(--mango-soft);border-color:var(--mango)}
+.dopt.win .dbar i{background:var(--pink)}
+.dopt .dn{font-variant-numeric:tabular-nums;text-align:right;font-weight:700;font-size:.9rem}
+@media (max-width:640px){.dopt{grid-template-columns:1fr 80px}.dopt .dbar{grid-column:1/-1;order:3}}
+</style>
+</head>
+<body data-mode="participant">
+<div class="deck">
+  <header class="topbar">
+    <div class="meta">
+      <span class="chip">Slide <strong id="slideNo">1</strong>&nbsp;of&nbsp;<strong id="slideTotal">1</strong></span>
+      <span class="chip presenter-only">Planned <strong id="planned">00:00</strong></span>
+      <span class="chip presenter-only" title="Starts when you leave the title slide. Click to reset.">Elapsed <strong id="elapsed" style="cursor:pointer">00:00</strong></span>
+      <span class="chip presenter-only" id="pace">Not started</span>
+      <span class="chip" id="liveChip" title="No database connected. Votes stay on this screen."><i class="live-dot"></i><span id="liveText">Offline mode</span></span>
+      <button class="chip participant-only" id="followBtn" hidden aria-pressed="true">Following the host ✓</button>
+      <span class="chip mini-timer presenter-only" id="miniTimer">⏱ <strong id="miniT">0:00</strong></span>
+    </div>
+    <div class="tools">
+      <button class="tool presenter-only" id="tLink" hidden>Copy participant link</button>
+      <button class="tool presenter-only" id="tNotes" aria-pressed="false" title="Facilitator notes (N)">Notes</button>
+      <button class="tool presenter-only" id="tTimer" aria-pressed="false" title="Timer (T)">Timer</button>
+      <button class="tool presenter-only" id="tPick" title="Pick a speaker (P)">Pick a speaker</button>
+      <button class="tool presenter-only" id="tReset" hidden title="Clear all live votes and ideas">Reset room</button>
+      <button class="tool" id="tFull" title="Full screen (F)">Full screen</button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- 0 TITLE -->
+    <section class="slide" data-start="0" data-label="Start">
+      <div class="inner title-wrap">
+        <p class="time-tag">Weekly English Discussion</p>
+        <h1 class="display big-title">Why did<br>they do that?</h1>
+        <p class="subtitle">A discussion on cultural difference at work</p>
+        <p class="ko">"쟤는 왜 저래?" 외국에서만 겪는 게 아니죠. 옆자리 동료, 다른 팀, 다른 세대와도 매일 생기는 일이에요.</p>
+        <p class="byline">Your guide today: <span contenteditable="true" id="hostName" spellcheck="false"></span> 🛺</p>
+        <div class="joinbox presenter-only" id="joinBox" hidden>
+          <div id="qr"></div>
+          <div><p class="ko">Join on your phone to vote live</p><p class="joinurl" id="joinUrl"></p></div>
+        </div>
+        <div class="row"><button class="btn pink host-ctl" data-next>Let's begin</button><span class="hint host-ctl">Use <kbd>→</kbd> or <kbd>Space</kbd> to move on</span></div>
+      </div>
+    </section>
+
+    <!-- 1 ROUTE -->
+    <section class="slide" data-start="2" data-label="Route">
+      <div class="inner">
+        <h2>Agenda</h2>
+        <div class="grid2">
+          <ol class="route">
+            <li><span class="min">4 min</span><span>Warm-up: have you ever been misunderstood?</span><span class="em">🙋</span></li>
+            <li><span class="min">6 min</span><span>A small story from Thailand</span><span class="em">🎬</span></li>
+            <li><span class="min">8 min</span><span>Two tools: the iceberg and the five dials</span><span class="em">🧊</span></li>
+            <li><span class="min">8 min</span><span>Game: which one are you?</span><span class="em">🎲</span></li>
+            <li><span class="min">23 min</span><span>Three rounds: my culture shock, who annoys you more, our first overseas program</span><span class="em">💬</span></li>
+            <li><span class="min">8 min</span><span>Your culture passport and three take-homes</span><span class="em">🛂</span></li>
+          </ol>
+          <div class="panel">
+            <h3 style="margin-bottom:12px">Three rules for today</h3>
+            <div class="rules">
+              <div><span>🙊</span><p>Grammar mistakes are welcome. Ideas matter more than perfect English.</p></div>
+              <div><span>🎤</span><p>Everyone speaks at least twice. Short is fine.</p></div>
+              <div><span>🌏</span><p>We talk about tendencies, not stereotypes. No culture is better or worse.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 WARM-UP -->
+    <section class="slide" data-start="4" data-label="Warm-up" data-stop="Warm-up">
+      <div class="inner">
+        <h2>Have you ever misunderstood someone from another culture?</h2>
+        <p class="ko">다른 문화의 사람을 오해하거나, 오해받은 적이 있나요? Tap one, then tell us in one sentence.</p>
+        <div class="speeds" id="speeds">
+          <button class="speed" data-k="0"><span class="big">😳</span><span class="name">Yes, and it was awkward</span><span class="ko">I still think about it</span><span class="bar"><i></i></span><span class="count">0 people</span></button>
+          <button class="speed" data-k="1"><span class="big">😂</span><span class="name">Yes, and we laughed</span><span class="ko">A funny story now</span><span class="bar"><i></i></span><span class="count">0 people</span></button>
+          <button class="speed" data-k="2"><span class="big">🤔</span><span class="name">Maybe, I'm not sure</span><span class="ko">Something felt off</span><span class="bar"><i></i></span><span class="count">0 people</span></button>
+          <button class="speed" data-k="3"><span class="big">🙅</span><span class="name">Not yet</span><span class="ko">Few chances so far</span><span class="bar"><i></i></span><span class="count">0 people</span></button>
+        </div>
+        <div class="row"><span class="phrases"><span>"It was awkward when…"</span><span>"We laughed because…"</span><span>"I'm not sure, but once…"</span></span><button class="btn small presenter-only" data-clear="speed:">Reset</button></div>
+      </div>
+    </section>
+
+    <!-- 3 FILM -->
+    <section class="slide" data-start="8" data-label="My story" data-id="film" data-stop="Story">
+      <div class="inner">
+        <h2>A small story: the internet guy 📡</h2>
+        <p class="ko">제가 태국에서 겪은 작은 오해 이야기예요. 약 1분 20초, 음성이 대사를 읽어줘요.</p>
+        <div class="film" id="film">
+          <div class="film-stage">
+            <div class="scene on" data-s="city">
+              <div class="sun"></div>
+              <div class="skyline"><i style="height:55%"></i><i style="height:80%"></i><i style="height:40%"></i><i style="height:95%"></i><i style="height:60%"></i><i style="height:75%"></i><i style="height:45%"></i><i style="height:88%"></i></div>
+              <div class="f-me">🧑‍💻</div>
+              <div class="f-sign" id="fNoWifi">No Wi-Fi 😱</div>
+            </div>
+            <div class="scene" data-s="call">
+              <div class="f-left">🧑<span>📱</span></div>
+              <div class="f-right"><span>📱</span>👷</div>
+              <div class="f-bub l" id="fB1"></div>
+              <div class="f-bub r" id="fB2"></div>
+            </div>
+            <div class="scene" data-s="cal">
+              <div class="f-cal"><div class="f-cal-top">Waiting for the internet</div><div class="f-cal-day">Day <b id="fDay">2</b></div></div>
+              <div class="f-clock">🕰️</div>
+            </div>
+            <div class="scene" data-s="inner">
+              <div class="f-face">🙂</div>
+              <div class="f-think"><span class="f-volc">🌋</span><span class="f-scream">빨리빨리!!!</span></div>
+            </div>
+            <div class="scene" data-s="door">
+              <div class="f-door">🚪</div>
+              <div class="f-tech">👷🧰</div>
+              <div class="f-bub r f-hello on" id="fB3">Sawasdee krap! 🙏</div>
+            </div>
+            <div class="scene" data-s="wifi">
+              <svg class="f-wifi" viewBox="0 0 100 80" aria-hidden="true"><circle class="wb w0" cx="50" cy="70" r="6"/><path class="wb w1" d="M35 57 Q50 44 65 57"/><path class="wb w2" d="M24 45 Q50 21 76 45"/><path class="wb w3" d="M13 33 Q50 -1 87 33"/></svg>
+              <div class="f-me2">🥹</div>
+              <div class="f-small">Mai pen rai…?</div>
+            </div>
+            <div class="scene" data-s="end">
+              <p class="f-endtxt">The end.<span>Or the beginning of my mai pen rai life. 🛺</span></p>
+            </div>
+            <div class="f-cap" id="fCap"></div>
+            <button class="f-play" id="fPlay">▶ Play the episode</button>
+          </div>
+          <div class="f-bar"><i id="fBar"></i></div>
+        </div>
+        <div class="row" style="justify-content:center"><button class="btn small" id="fToggle">Pause</button><button class="btn small" id="fReplay">Replay</button><button class="btn small" id="fVoice" aria-pressed="true">🔊 Voice on</button><select id="fVoiceSel" class="vsel" aria-label="Choose a voice"></select></div>
+      </div>
+    </section>
+
+    <!-- 4 LESSON -->
+    <section class="slide" data-start="12" data-label="What happened">
+      <div class="inner">
+        <p class="time-tag">What was really going on</p>
+        <div class="grid2">
+          <div class="panel step" style="background:var(--sky)"><h3>🇰🇷 My rule</h3><p>"Tomorrow" means tomorrow. Fast is polite. Waiting is wasting.</p><p class="ko" style="margin-top:8px">빨리빨리 = "hurry, hurry"</p></div>
+          <div class="panel step" style="background:var(--teal-soft)"><h3>🇹🇭 His rule</h3><p>"Tomorrow" means soon. Calm is polite. Stress is rude.</p><p class="ko" style="margin-top:8px">Mai pen rai (ไม่เป็นไร) = "no worries"</p></div>
+        </div>
+        <p class="quote step">He wasn't lazy. I wasn't crazy. We were following different rules.</p>
+        <div class="panel soft step" style="border-color:var(--pink)">
+          <h3>Today's definition</h3>
+          <p class="defn">A cultural difference is when two people follow <b>different hidden rules</b>, and neither of them knows it.</p>
+          <p class="ko">문화 차이란, 두 사람이 서로 다른 "보이지 않는 규칙"을 따르면서 그 사실을 모르는 것.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 ICEBERG -->
+    <section class="slide" data-start="14" data-label="The iceberg" data-stop="Tools">
+      <div class="inner">
+        <h2>Tool 1: Most of culture is under water 🧊</h2>
+        <p class="ko">문화의 대부분은 보이지 않는 곳에 있어요. 보이는 차이는 금방 배우지만, 보이지 않는 차이가 오해를 만듭니다.</p>
+        <div class="iceberg">
+          <div class="ice-top">
+            <p class="ice-label">What you can see</p>
+            <div class="chips"><span>🍜 Food</span><span>🗣️ Language</span><span>👔 Clothes</span><span>🙏 Greetings</span><span>🎉 Holidays</span></div>
+          </div>
+          <div class="waterline"><span>waterline</span></div>
+          <div class="ice-bottom step">
+            <p class="ice-label">What you can't see</p>
+            <div class="chips"><span>⏰ How we treat time</span><span>🙋 When we speak up</span><span>🎯 How we give feedback</span><span>🎩 Who decides</span><span>🤝 How we build trust</span><span>👂 What "yes" really means</span></div>
+          </div>
+        </div>
+        <p class="follow step">The internet guy lived under water: it was about <b>time</b> and <b>stress</b>, not about Wi-Fi. Most work misunderstandings live here too.</p>
+      </div>
+    </section>
+
+    <!-- 6 DIALS -->
+    <section class="slide" data-start="18" data-label="Five dials">
+      <div class="inner">
+        <h2>Tool 2: Five dials under the water 🎛️</h2>
+        <p class="ko">물 아래의 차이를 다섯 개의 다이얼로 정리했어요. 각 선 위의 점은 나라별 대략적 위치이고, 큰 분홍 점이 한국이에요.</p>
+        <div class="dials" id="dials"></div>
+        <p class="ko">Positions are rough tendencies based on Erin Meyer's <i>The Culture Map</i> and Hofstede's research, not facts about any individual. 🇰🇷 marks where Korea usually sits.</p>
+        <p class="follow step">My Thai story was only dial 5. The other four cause even more trouble at work. Let's test them.</p>
+      </div>
+    </section>
+
+    <!-- 7 GAME -->
+    <section class="slide" data-start="22" data-label="Game" data-stop="Game">
+      <div class="inner">
+        <h2>Game: which one are you?</h2>
+        <p class="ko">여섯 가지 상황, 두 가지 선택. 한국인끼리도 갈립니다. 정답은 없어요.</p>
+        <div class="game panel">
+          <div class="row" style="justify-content:space-between"><span class="row"><span class="ko" id="sitNo">Situation 1 of 6</span><span class="dialtag" id="dialTag"></span></span><div class="dots" id="sitDots"></div></div>
+          <p class="sit" id="sitText"></p>
+          <div class="votes">
+            <button class="vote slow" id="vSlow"><span id="optA">A</span><span class="n" id="nSlow">0</span></button>
+            <button class="vote fast" id="vFast"><span id="optB">B</span><span class="n" id="nFast">0</span></button>
+          </div>
+          <div class="split" aria-hidden="true"><i class="s1" id="splitA"></i><i class="s2" id="splitB"></i></div>
+          <p class="heat" id="heat" aria-live="polite"></p>
+          <div class="take" id="take"></div>
+          <div class="fact" id="fact" hidden></div>
+          <div class="row host-ctl" style="justify-content:space-between">
+            <button class="btn small" id="sitPrev">Previous</button>
+            <button class="btn mango small" id="sitReveal">Reveal the twist and the data</button>
+            <button class="btn small" id="sitNext">Next situation</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 FORMAT -->
+    <section class="slide" data-start="30" data-label="How we talk" data-stop="Discussion">
+      <div class="inner">
+        <h2>Three rounds, one rhythm</h2>
+        <div class="format">
+          <div class="panel"><span class="m">1</span><h3>Think</h3><p>One minute alone. Vote on your phone and write one keyword.</p></div>
+          <div class="panel"><span class="m">2</span><h3>Pair</h3><p>Two minutes with your neighbor. Practice in English before the stage.</p></div>
+          <div class="panel"><span class="m">4</span><h3>Share</h3><p>Four minutes together. The tuk-tuk picks a few people.</p></div>
+        </div>
+        <div class="rounds-map">
+          <div class="rm"><span class="qtag me">Round 1</span><b>My culture shock</b><small>What did I notice? (awareness)</small></div>
+          <div class="rm"><span class="qtag org">Round 2</span><b>Reading the room</b><small>What can a team do? (skill)</small></div>
+          <div class="rm"><span class="qtag hrd">Round 3</span><b>Global HRD</b><small>What should we design? (our job)</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 ROUND 1 -->
+    <section class="slide" data-start="31" data-label="Round 1">
+      <div class="inner">
+        <span class="qtag me">Round 1: My culture shock</span>
+        <p class="question" style="max-width:none">Tell us about one moment when another culture surprised you. What did you think at first, and what did you learn later?</p>
+        <p class="ko">다른 문화에 놀랐던 순간 하나를 이야기해 주세요. 처음엔 어떻게 생각했고, 나중에 무엇을 알게 됐나요? (해외, 외국 동료, 다른 회사, 다른 세대 모두 가능)</p>
+        <div class="panel soft">
+          <p style="font-weight:700;margin-bottom:6px">How to build your answer (1 minute)</p>
+          <div class="recipe"><span>1. The moment: "When I was in…"</span><span>2. First thought: "I thought they were…"</span><span>3. Later: "Then I realized…"</span><span>4. Which dial? "It was about…"</span></div>
+        </div>
+        <div class="phrases"><span>"At first I thought it was rude, but…"</span><span>"Later I realized it was about…"</span><span>"I think it was dial 3, hierarchy."</span></div>
+        <div class="row presenter-only"><button class="btn teal" data-timer="60">Think · 1 min</button><button class="btn" data-timer="120">Pair · 2 min</button><button class="btn pink" data-pick>Pick a speaker 🛺</button></div>
+        <div class="quickvote">
+          <p class="qv-title">Quick vote: in a meeting, you disagree with the most senior person. What do you usually do?</p>
+          <div class="grid2" style="margin-top:10px">
+            <button class="panel style-card" data-r1="slow" style="background:var(--teal-soft)"><h3>🤐 Stay quiet, talk later</h3><p>"I'll mention it privately afterwards."</p><span class="n">0</span></button>
+            <button class="panel style-card" data-r1="fast" style="background:var(--pink-soft)"><h3>🙋 Say it now, politely</h3><p>"I see it differently, here's why."</p><span class="n">0</span></button>
+          </div>
+          <div class="row presenter-only" style="margin-top:8px"><button class="btn small" data-clear="r1:">Reset votes</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 ROUND 2 -->
+    <section class="slide" data-start="38" data-label="Round 2">
+      <div class="inner">
+        <span class="qtag org">Round 2: Who annoys you more?</span>
+        <div class="story">
+          <p class="story-line step"><b>Imagine you are the leader of a global project team.</b> Last week you shared your plan and asked for feedback.</p>
+          <div class="grid2 step">
+            <div class="panel" style="background:var(--teal-soft)"><h3>🇹🇭 Your colleague in Thailand</h3><p>Smiled and said <b>"Yes, good plan!"</b><br>One week later, nothing was done.</p></div>
+            <div class="panel" style="background:var(--pink-soft)"><h3>🇩🇪 Your colleague in Germany</h3><p>Said, in front of everyone, <b>"This plan has three problems."</b></p></div>
+          </div>
+        </div>
+        <p class="question step" style="max-width:none">Honestly, which one annoys you more? And how would you solve it?</p>
+        <p class="ko step">솔직히 누가 더 싫은가요? 그리고 리더로서 어떻게 해결하겠어요?</p>
+        <div class="grid2 step">
+          <button class="panel style-card" data-r2="th" style="background:var(--teal-soft)"><h3>😤 The Thai colleague</h3><p>"Yes" means yes! Why didn't she just tell me?</p><span class="n">0</span></button>
+          <button class="panel style-card" data-r2="de" style="background:var(--pink-soft)"><h3>😤 The German colleague</h3><p>In front of everyone? He could have told me privately.</p><span class="n">0</span></button>
+        </div>
+        <div class="panel soft step">
+          <p style="font-weight:700;margin-bottom:6px">How to build your answer (1 minute)</p>
+          <div class="recipe"><span>1. My vote: "The … colleague annoys me more, because…"</span><span>2. Their hidden rule: "But in their culture…"</span><span>3. My solution: "So next time, I would…"</span></div>
+        </div>
+        <div class="phrases"><span>"I'd be more annoyed by… because…"</span><span>"But I think their rule is…"</span><span>"As the leader, I would…"</span><span>"To be fair, we Koreans also say 'yes' when we mean…"</span></div>
+        <div class="row presenter-only"><button class="btn teal" data-timer="60">Think · 1 min</button><button class="btn" data-timer="120">Pair · 2 min</button><button class="btn pink" data-pick>Pick a speaker 🛺</button><button class="btn small" data-clear="r2:">Reset votes</button></div>
+      </div>
+    </section>
+
+    <!-- 11 ROUND 3 -->
+    <section class="slide" data-start="45" data-label="Round 3">
+      <div class="inner">
+        <span class="qtag hrd">Round 3: Our first overseas program</span>
+        <p class="lead"><b>Next year, our team builds its first training program for overseas colleagues.</b> Can we just take the Korean program and send it?</p>
+        <p class="ko">내년에 우리 팀이 해외 구성원용 첫 교육 과정을 만들어요. 한국용 과정을 그대로 보내면 될까요? 네 가지 결정을 하나씩 투표하고 결과를 봅니다.</p>
+
+        <div class="lost step">
+          <p style="font-weight:700;margin-bottom:6px">Warm-up: what doesn't translate? Tap a word. 🈚</p>
+          <div class="exlist">
+            <button class="wcard"><b>패기</b><span class="w-hint">How would you teach this to a Thai colleague?</span><span class="w-ans">"Drive, grit, can-do spirit." The word is in every SK value statement, and no single English word covers it.</span></button>
+            <button class="wcard"><b>눈치</b><span class="w-hint">How would you teach this to a Thai colleague?</span><span class="w-ans">"Reading the room." Thailand has kreng jai, so a Thai colleague might get it faster than a German one.</span></button>
+            <button class="wcard"><b>수고하셨습니다</b><span class="w-hint">How would you teach this to a Thai colleague?</span><span class="w-ans">"Thank you for your hard work." Said ten times a day. In English it sounds strangely formal.</span></button>
+            <button class="wcard"><b>보고</b><span class="w-hint">How would you teach this to a Thai colleague?</span><span class="w-ans">"Report" is too weak. It means keep your boss informed, often, before being asked.</span></button>
+            <button class="wcard"><b>회식</b><span class="w-hint">How would you teach this to a Thai colleague?</span><span class="w-ans">"Team dinner" misses the point. It's where trust is built, and where "no" is complicated.</span></button>
+          </div>
+        </div>
+
+        <div class="game panel step" id="decisions">
+          <div class="row" style="justify-content:space-between"><span class="row"><span class="ko" id="decNo">Decision 1 of 4</span><span class="dialtag" id="decTag"></span></span><div class="dots" id="decDots"></div></div>
+          <p class="sit" id="decText"></p>
+          <div class="dopts" id="decOpts"></div>
+          <div class="take" id="decTake"></div>
+          <div class="row host-ctl" style="justify-content:space-between">
+            <button class="btn small" id="decPrev">Previous</button>
+            <button class="btn mango small" id="decReveal">Show the room's answer</button>
+            <button class="btn small" id="decNext">Next decision</button>
+          </div>
+        </div>
+
+        <div class="step">
+          <p class="question" style="max-width:none">Which decision was the hardest for you, and why?</p>
+          <p class="ko">네 가지 결정 중 가장 어려웠던 것은? 그리고 그 이유는?</p>
+          <div class="phrases"><span>"The hardest one for me was… because…"</span><span>"If we choose…, the risk is…"</span><span>"So the skill our team needs most is…"</span></div>
+          <div class="row presenter-only"><button class="btn teal" data-timer="60">Think · 1 min</button><button class="btn" data-timer="120">Pair · 2 min</button><button class="btn pink" data-pick>Pick a speaker 🛺</button><button class="btn small" data-clear="d3:">Reset all four votes</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 PASSPORT -->
+    <section class="slide" data-start="52" data-label="Culture passport" data-stop="Wrap-up">
+      <div class="inner">
+        <h2>Your culture passport 🛂</h2>
+        <p class="ko">오늘 게임(과 Round 1 투표)에서 고른 답을 바탕으로 계산한 당신의 스타일이에요. 오른쪽에는 방 전체에 어떤 여권이 몇 개 생겼는지 보여요. 재미로 보세요.</p>
+        <div class="mixgrid">
+          <div class="mix" id="mixMine">
+            <span class="em" id="mixEm">⚖️</span>
+            <span class="label" id="mixLabel">Sweden: Lagom</span>
+            <p id="mixPct" class="ko">Make a few choices first</p>
+            <div class="breakdown" id="mixParts"></div>
+            <input type="range" min="0" max="100" value="50" id="mixRange" aria-label="Adjust your culture passport between harmony and directness">
+            <div class="ends"><span>🕊️ Harmony first</span><span>Say it straight 🗣️</span></div>
+            <p class="ko" id="mixDesc">Not you? Drag the slider to fix it.</p>
+          </div>
+          <div class="track-wrap">
+            <h3 id="trackTitle">Passports in this room</h3>
+            <div class="tally" id="tally"></div>
+          </div>
+        </div>
+        <p class="sentence">"When I work with people from <u></u>, I'll remember that <u></u> is not rude. It's a different rule."</p>
+        <div class="row presenter-only" style="justify-content:center"><button class="btn pink" data-pick>Pick a speaker 🛺</button></div>
+      </div>
+    </section>
+
+    <!-- 13 TAKEAWAYS -->
+    <section class="slide" data-start="55" data-label="Take-homes">
+      <div class="inner">
+        <h2>Three things to take home</h2>
+        <div class="takes">
+          <div class="step"><span class="k">1</span><div><p>Different is not wrong. It's a different hidden rule.</p><small>The internet guy wasn't lazy. The German colleague wasn't rude. The Thai "yes" wasn't a lie. Before judging the person, look for the rule.</small></div></div>
+          <div class="step"><span class="k">2</span><div><p>Look under the water. Check the five dials.</p><small>Food and language are easy. Speaking, feedback, hierarchy, trust, and time are where work goes wrong. When something feels "off," ask: which dial is this?</small></div></div>
+          <div class="step"><span class="k">3</span><div><p>A global program is not a translated program.</p><small>Some words don't translate, some skills aren't the same, and some obstacles are ours, not theirs. Design for that from day one.</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 CLOSING -->
+    <section class="slide" data-start="58" data-label="Thank you" data-id="closing" data-stop="Closing">
+      <div class="inner">
+        <p class="thai" style="font-size:clamp(1.4rem,3vw,2.2rem);color:var(--teal)">ขอบคุณครับ / ค่ะ</p>
+        <h1 class="thanks display">Khob khun krap 🙏</h1>
+        <p class="lead">Next time someone seems too slow, too direct, or too quiet, take a breath: <b>mai pen rai.</b><br>Then ask about the rule behind it.</p>
+        <div class="panel soft">
+          <h3 style="margin-bottom:10px">How was the ride?</h3>
+          <div class="row">
+            <button class="react" data-e="🐢" aria-label="Relaxing">🐢</button>
+            <button class="react" data-e="🛺" aria-label="Fun ride">🛺</button>
+            <button class="react" data-e="🚀" aria-label="Energizing">🚀</button>
+            <button class="react" data-e="💡" aria-label="Learned something">💡</button>
+            <span class="react-count" id="reactCount">0 reactions</span>
+          </div>
+        </div>
+        <div class="row presenter-only"><button class="btn mango" id="confettiBtn">More confetti 🎉</button><button class="btn small" data-go="0">Back to start</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="roadbar">
+    <button class="navbtn" id="prev" aria-label="Previous slide">←</button>
+    <div class="road" id="road">
+      <div class="asphalt"></div>
+      <div class="done" id="done"></div>
+      <div class="tuktuk" id="tuktuk" aria-hidden="true"><span>🛺</span></div>
+    </div>
+    <button class="navbtn" id="next" aria-label="Next slide">→</button>
+  </footer>
+</div>
+
+<div class="drawer notes" id="notes" role="region" aria-label="Facilitator notes">
+  <h4 id="notesTitle">Notes</h4>
+  <div class="body" id="notesBody"></div>
+</div>
+
+<div class="drawer timer" id="timer" role="region" aria-label="Timer">
+  <div class="ring">
+    <svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="ringArc" cx="75" cy="75" r="64" fill="none" stroke="var(--mango)" stroke-width="12" stroke-linecap="round" stroke-dasharray="402.1" stroke-dashoffset="0"/></svg>
+    <div class="t" id="tDisplay">3:00</div>
+  </div>
+  <p class="tune" id="tuneName"></p>
+  <div style="display:none">
+  </div>
+  <div class="presets">
+    <button class="btn small" data-preset="60">1m</button>
+    <button class="btn small" data-preset="120">2m</button>
+    <button class="btn small" data-preset="180">3m</button>
+    <button class="btn small" data-preset="300">5m</button>
+  </div>
+  <div class="row" style="justify-content:center">
+    <button class="btn pink small" id="tStart">Start</button>
+    <button class="btn small" id="tReset">Reset</button>
+    <button class="btn small" id="tMusic" aria-pressed="true" title="A new Thai-style tune is generated every time the timer starts">🎵 Music on</button>
+  </div>
+</div>
+
+<dialog id="picker">
+  <h3 style="margin-bottom:8px">Who's next in the tuk-tuk? 🛺</h3>
+  <p class="ko" style="margin-bottom:8px">Type names separated by commas or new lines, or use the names of people who joined.</p>
+  <textarea id="names" placeholder="Jiwon, Minsu, Sora, Taeho"></textarea>
+  <div class="picked" id="picked" aria-live="polite"></div>
+  <div class="row" style="justify-content:space-between">
+    <div class="row"><button class="btn pink" id="spin">Pick someone</button><button class="btn small" id="useJoined">Use joined names</button><button class="btn small" id="newRound">New round</button></div>
+    <button class="btn small" id="closePick">Close</button>
+  </div>
+  <div class="namechips" id="namechips"></div>
+</dialog>
+
+<dialog id="joinDlg">
+  <h3 style="margin-bottom:8px">Welcome aboard the tuk-tuk 🛺</h3>
+  <p class="ko" style="margin-bottom:12px">What should we call you? Your votes will show up live on the host's screen.</p>
+  <div class="row"><input id="joinName" maxlength="30" placeholder="Your name" style="flex:1;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:10px 12px;background:var(--bg)"><button class="btn pink" id="joinGo">Join</button></div>
+</dialog>
+
+<dialog id="videoDlg">
+  <div class="vframe" id="vframe"></div>
+  <div class="row" style="justify-content:space-between;margin-top:12px">
+    <a class="btn small" id="vOpen" href="#" target="_blank" rel="noopener" style="text-decoration:none;color:var(--ink)">Open on YouTube</a>
+    <button class="btn small" id="vClose">Close</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="fx-layer" id="fx"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const PRESENTER = document.body.dataset.mode !== 'participant';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem('mpr:'+k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem('mpr:'+k, JSON.stringify(v)); }catch(e){} }
+  };
+  const qs = new URLSearchParams(location.search);
+  const ROOM = (qs.get('room') || 'main').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30) || 'main';
+  let CID = store.get('cid', '');
+  if (!CID){ CID = Math.random().toString(36).slice(2, 12); store.set('cid', CID); }
+  let NAME = store.get('name', '');
+  let PKEY = store.get('pkey', '');
+  let LIVE = false;
+  let following = true;
+
+  const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+  const fmt2 = s => { s = Math.max(0, Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); };
+  function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 2400); }
+
+  /* =========== shared state =========== */
+  const empty = () => ({ nav:null, people:{}, speed:{}, r1:{}, r2:{}, r3:{}, gauge:{}, mix:{}, game:{}, d3:{}, ideas:[], react:{} });
+  let S = empty();
+  const voterId = () => LIVE ? CID : 'l' + Math.random().toString(36).slice(2, 9);
+
+  function parseHash(h){
+    const n = empty();
+    Object.keys(h).forEach(k => {
+      const v = h[k];
+      const i = k.indexOf(':');
+      const kind = i < 0 ? k : k.slice(0, i);
+      const rest = i < 0 ? '' : k.slice(i+1);
+      if (kind === 'nav'){ try{ n.nav = JSON.parse(v); }catch(e){} }
+      else if (kind === 'game' || kind === 'd3'){ const j = rest.indexOf(':'); if (j > 0){ const q = rest.slice(0, j); (n[kind][q] = n[kind][q] || {})[rest.slice(j+1)] = v; } }
+      else if (kind === 'idea'){ try{ const o = JSON.parse(v); o.id = rest; n.ideas.push(o); }catch(e){} }
+      else if (kind === 'react'){ n.react[rest] = +v || 0; }
+      else if (['people','speed','r1','r2','r3','gauge','mix'].includes(kind)){ n[kind][rest] = v; }
+    });
+    n.ideas.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    return n;
+  }
+
+  async function act(op, data){
+    if (!LIVE) return;
+    try{
+      const r = await fetch('/api/act', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(Object.assign({ op, room:ROOM, cid:CID, key:PKEY }, data || {})) });
+      if (r.status === 401 && PRESENTER) askKey();
+      setTimeout(poll, 120);
+    }catch(e){}
+  }
+  function askKey(){
+    if (askKey.busy) return; askKey.busy = true;
+    const k = window.prompt('Presenter key (the PRESENTER_KEY you set on Vercel):', '');
+    askKey.busy = false;
+    if (k){ PKEY = k; store.set('pkey', k); pushNav(true); }
+  }
+
+  let polling = false;
+  async function poll(){
+    if (!LIVE || polling || document.hidden) return;
+    polling = true;
+    try{
+      const r = await fetch('/api/state?room=' + encodeURIComponent(ROOM), { cache:'no-store' });
+      const j = await r.json();
+      if (j && j.ok){ S = parseHash(j.h || {}); applyRemoteNav(); renderAll(); setLive(true); }
+    }catch(e){ setLive(true, 'Reconnecting…'); }
+    polling = false;
+  }
+
+  function setLive(on, text){
+    const chip = $('#liveChip');
+    document.body.classList.toggle('is-live', LIVE);
+    if (LIVE){
+      const n = Object.keys(S.people).length;
+      chip.classList.add('live'); chip.title = 'Votes are shared live with everyone in this room.';
+      $('#liveText').textContent = text || ('Live, ' + n + (n === 1 ? ' person joined' : ' people joined'));
+    } else {
+      chip.classList.remove('live');
+      $('#liveText').textContent = 'Offline mode';
+    }
+  }
+
+  /* =========== slides =========== */
+  const slides = $$('.slide');
+  let idx = -1;
+  $('#slideTotal').textContent = slides.length;
+  const road = $('#road');
+  slides.forEach((s, i) => {
+    if (!s.dataset.stop && i !== 0) return;
+    const b = document.createElement('button');
+    b.className = 'stop'; b.style.left = (i/(slides.length-1)*100) + '%'; b.dataset.i = i;
+    b.setAttribute('aria-label', 'Go to ' + (s.dataset.stop || 'start'));
+    const l = document.createElement('span'); l.className = 'lbl'; l.textContent = s.dataset.stop || 'Start';
+    b.appendChild(l); b.addEventListener('click', () => go(i));
+    road.insertBefore(b, $('#tuktuk'));
+  });
+
+  function go(i, remote){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    if (i === idx) return;
+    const prevIdx = idx;
+    slides.forEach((s, j) => { s.classList.toggle('active', j === i); s.classList.toggle('past', j < i); });
+    idx = i;
+    if (PRESENTER && i > 0 && !sessionStart) sessionStart = Date.now();
+    const pct = i/(slides.length-1)*100;
+    $('#tuktuk').style.left = pct + '%';
+    $('#done').style.width = pct + '%';
+    $$('.stop').forEach(st => st.classList.toggle('passed', +st.dataset.i <= i));
+    if (prevIdx !== -1){ const tk = $('#tuktuk'); tk.classList.remove('bump'); void tk.offsetWidth; tk.classList.add('bump'); }
+    $('#slideNo').textContent = i+1;
+    $('#planned').textContent = fmt2((+slides[i].dataset.start || 0) * 60);
+    updatePace(); renderNotes(); onEnter(slides[i], slides[prevIdx]);
+    if (!remote) pushNav();
+    try{ history.replaceState(null, '', location.pathname + location.search + '#' + (i+1)); }catch(e){}
+  }
+  function stepsShown(){ return slides[idx].querySelectorAll('.step.shown').length; }
+  function setSteps(n){ slides[idx].querySelectorAll('.step').forEach((el, k) => el.classList.toggle('shown', k < n)); }
+  function next(){
+    const pending = slides[idx].querySelector('.step:not(.shown)');
+    if (pending){ pending.classList.add('shown'); pushNav(); return; }
+    go(idx+1);
+  }
+  function prev(){ go(idx-1); }
+  let navTimer = null;
+  function pushNav(now){
+    if (!PRESENTER || !LIVE) return;
+    clearTimeout(navTimer);
+    navTimer = setTimeout(() => act('nav', { slide:idx, step:stepsShown(), sit:si, reveal:revealed ? 1 : 0, dec:di, drev:drevealed ? 1 : 0 }), now ? 0 : 120);
+  }
+  let lastNavT = 0;
+  function applyRemoteNav(){
+    if (PRESENTER || !following || !S.nav || S.nav.t === lastNavT) return;
+    lastNavT = S.nav.t;
+    go(S.nav.slide, true);
+    setSteps(S.nav.step || 0);
+    si = Math.max(0, Math.min(sits.length-1, S.nav.sit || 0));
+    revealed = !!S.nav.reveal;
+    di = Math.max(0, Math.min(3, S.nav.dec || 0)); drevealed = !!S.nav.drev;
+  }
+
+  $('#next').addEventListener('click', next);
+  $('#prev').addEventListener('click', prev);
+  $$('[data-next]').forEach(b => b.addEventListener('click', next));
+  $$('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+  document.addEventListener('keydown', e => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+    if (document.querySelector('dialog[open]')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
+    else if (e.key === 'f' || e.key === 'F') fullscreen();
+    else if (!PRESENTER) return;
+    else if (e.key === 'n' || e.key === 'N') toggleNotes();
+    else if (e.key === 't' || e.key === 'T') toggleTimer();
+    else if (e.key === 'p' || e.key === 'P') openPicker(false);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(slides.length-1);
+  });
+  let sx = null;
+  $('#stage').addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive:true });
+  $('#stage').addEventListener('touchend', e => {
+    if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null;
+    const t = e.target.tagName.toLowerCase();
+    if (t === 'input') return;
+    if (Math.abs(dx) > 80){ dx < 0 ? next() : prev(); }
+  });
+
+  // participant follow toggle
+  const fb = $('#followBtn');
+  fb.addEventListener('click', () => {
+    following = !following;
+    fb.setAttribute('aria-pressed', following);
+    fb.textContent = following ? 'Following the host ✓' : 'Browsing on my own';
+    if (following){ lastNavT = 0; applyRemoteNav(); renderAll(); }
+  });
+
+  /* =========== session clock =========== */
+  let sessionStart = null;
+  function updatePace(){
+    const el = $('#pace');
+    if (!sessionStart){ el.textContent = 'Not started'; el.className = 'chip presenter-only'; return; }
+    const elapsed = (Date.now() - sessionStart) / 1000;
+    $('#elapsed').textContent = fmt2(elapsed);
+    const plannedNext = slides[idx+1] ? (+slides[idx+1].dataset.start)*60 : 3600;
+    const plannedNow = (+slides[idx].dataset.start)*60;
+    if (elapsed > plannedNext + 60){ el.textContent = '🐢 ' + Math.round((elapsed-plannedNext)/60) + ' min behind'; el.className = 'chip presenter-only late'; }
+    else if (elapsed < plannedNow - 120){ el.textContent = '🚀 ' + Math.round((plannedNow-elapsed)/60) + ' min ahead'; el.className = 'chip presenter-only ok'; }
+    else { el.textContent = '✅ On track'; el.className = 'chip presenter-only ok'; }
+  }
+  if (PRESENTER) setInterval(updatePace, 1000);
+  $('#elapsed').addEventListener('click', () => { if (sessionStart){ sessionStart = Date.now(); toast('Clock reset'); updatePace(); } });
+
+  /* =========== notes / fullscreen / host =========== */
+  function renderNotes(){
+    const n = slides[idx].querySelector('.notes');
+    $('#notesTitle').textContent = 'Notes: ' + (slides[idx].dataset.label || '');
+    $('#notesBody').innerHTML = n ? n.innerHTML : '<p>No notes for this slide.</p>';
+  }
+  function toggleNotes(){ const d = $('#notes'); d.classList.toggle('open'); $('#tNotes').setAttribute('aria-pressed', d.classList.contains('open')); }
+  $('#tNotes').addEventListener('click', toggleNotes);
+  function fullscreen(){
+    try{
+      if (!document.fullscreenElement){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+      else if (document.exitFullscreen){ document.exitFullscreen(); }
+    }catch(e){ toast('Full screen is not available here'); }
+  }
+  $('#tFull').addEventListener('click', fullscreen);
+  const host = $('#hostName');
+  host.textContent = store.get('host', '');
+  if (!PRESENTER) host.contentEditable = 'false';
+  host.addEventListener('input', () => store.set('host', host.textContent.trim()));
+  host.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); host.blur(); } });
+
+  /* =========== timer =========== */
+  let tTotal = 180, tLeft = 180, tRun = false, tInt = null;
+  const C = 402.1;
+  function renderTimer(){
+    $('#tDisplay').textContent = fmt(tLeft); $('#miniT').textContent = fmt(tLeft);
+    $('#ringArc').setAttribute('stroke-dashoffset', String(C * (1 - tLeft/tTotal)));
+    $('#ringArc').setAttribute('stroke', tLeft <= 10 && tRun ? 'var(--pink)' : 'var(--mango)');
+    $('#tStart').textContent = tRun ? 'Pause' : (tLeft < tTotal && tLeft > 0 ? 'Resume' : 'Start');
+    document.body.classList.toggle('timer-running', tRun);
+  }
+  function setTimer(sec){ stopTimer(); tTotal = sec; tLeft = sec; $('#timer').classList.remove('done'); renderTimer(); }
+  function startTimer(){
+    if (tLeft <= 0) tLeft = tTotal;
+    tRun = true; $('#timer').classList.remove('done'); music.start();
+    const end = Date.now() + tLeft*1000;
+    clearInterval(tInt);
+    tInt = setInterval(() => {
+      tLeft = Math.max(0, Math.round((end - Date.now())/1000));
+      if (tLeft <= 0){ stopTimer(); $('#timer').classList.add('done'); chime(); toast("Time's up! Wrap up your thought 🛺"); }
+      renderTimer();
+    }, 250);
+    renderTimer();
+  }
+  function stopTimer(){ tRun = false; clearInterval(tInt); renderTimer(); music.stop(); }
+  function toggleTimer(force){
+    const d = $('#timer'); const open = force === undefined ? !d.classList.contains('open') : force;
+    d.classList.toggle('open', open); $('#tTimer').setAttribute('aria-pressed', open);
+  }
+  $('#tTimer').addEventListener('click', () => toggleTimer());
+  $('#tStart').addEventListener('click', () => tRun ? stopTimer() : startTimer());
+  $('#tReset').addEventListener('click', () => setTimer(tTotal));
+  $$('[data-preset]').forEach(b => b.addEventListener('click', () => setTimer(+b.dataset.preset)));
+  $$('[data-timer]').forEach(b => b.addEventListener('click', () => { setTimer(+b.dataset.timer); toggleTimer(true); startTimer(); }));
+  $('#miniTimer').addEventListener('click', () => toggleTimer(true));
+  renderTimer();
+  let actx = null;
+  function ctx(){ actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); return actx; }
+  // Thai-inspired generative music: a new tune every time the timer starts.
+  const music = (function(){
+    let on = true, timer = null, step = 0, bus = null, song = null, seed = 1;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    const pick = arr => arr[Math.floor(rnd() * arr.length)];
+    const SCALES = { 'Lao pentatonic':[0,2,4,7,9], 'Thai minor':[0,3,5,7,10], 'Isan mode':[0,2,5,7,9], 'Ranat major':[0,2,4,5,7,9] };
+    const NAMES = ['Golden Temple', 'Floating Market', 'Tuk-tuk Breeze', 'Chao Phraya Sunset', 'Mango Sticky Rice', 'Songkran Morning', 'Night Train to Chiang Mai', 'Khao San Lullaby', 'Lotus Pond', 'Elephant Parade'];
+    function setup(){
+      const c = ctx();
+      if (bus) return;
+      bus = c.createGain(); bus.gain.value = .32;
+      // reverb
+      const conv = c.createConvolver(); const len = c.sampleRate * 1.8; const ir = c.createBuffer(2, len, c.sampleRate);
+      for (let ch = 0; ch < 2; ch++){ const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.6); }
+      conv.buffer = ir; const wet = c.createGain(); wet.gain.value = .35;
+      // delay
+      const dl = c.createDelay(1); dl.delayTime.value = .38; const fb = c.createGain(); fb.gain.value = .28; const dwet = c.createGain(); dwet.gain.value = .22;
+      dl.connect(fb); fb.connect(dl); dl.connect(dwet); dwet.connect(c.destination);
+      bus.connect(c.destination); bus.connect(conv); conv.connect(wet); wet.connect(c.destination); bus.connect(dl);
+    }
+    function env(g, t, a, d, peak){ g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); }
+    function ranat(f, t, dur, vel){ // wooden xylophone: bright attack, quick decay, slight detune
+      const c = ctx(); const g = c.createGain(); env(g, t, .006, dur, vel);
+      [[1, 'sine', 1], [2.76, 'sine', .25], [1.003, 'triangle', .35]].forEach(([m, type, gain]) => { const o = c.createOscillator(), og = c.createGain(); o.type = type; o.frequency.value = f*m; og.gain.value = gain; o.connect(og); og.connect(g); o.start(t); o.stop(t + dur + .1); });
+      g.connect(bus);
+    }
+    function khim(f, t, vel){ // plucked dulcimer
+      const c = ctx(); const o = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter(); o.type = 'sawtooth'; o.frequency.value = f; lp.type = 'lowpass'; lp.frequency.setValueAtTime(f*6, t); lp.frequency.exponentialRampToValueAtTime(f*1.5, t + .35);
+      env(g, t, .004, .4, vel); o.connect(lp); lp.connect(g); g.connect(bus); o.start(t); o.stop(t + .6);
+    }
+    function pad(f, t, dur){ // breathy drone
+      const c = ctx(); const g = c.createGain(), lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900;
+      [-6, 0, 7].forEach(cents => { const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = f; o.detune.value = cents; o.connect(lp); o.start(t); o.stop(t + dur + .3); });
+      g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.05, t + 1.2); g.gain.setValueAtTime(.05, t + dur - .8); g.gain.linearRampToValueAtTime(.0001, t + dur);
+      lp.connect(g); g.connect(bus);
+    }
+    function ching(t, open){ // small cymbals
+      const c = ctx(); const n = c.createBufferSource(); const len = c.sampleRate * (open ? .5 : .08); const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1);
+      n.buffer = buf; const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 6000; const g = c.createGain(); env(g, t, .003, open ? .45 : .07, open ? .07 : .05);
+      n.connect(hp); hp.connect(g); g.connect(bus); n.start(t); n.stop(t + (open ? .6 : .12));
+    }
+    function thon(f, t, vel){ // goblet drum
+      const c = ctx(); const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f*2, t); o.frequency.exponentialRampToValueAtTime(f, t + .08);
+      env(g, t, .004, .22, vel); o.connect(g); g.connect(bus); o.start(t); o.stop(t + .3);
+    }
+    function gong(f, t){ const c = ctx(); const o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o2.type = 'sine'; o.frequency.value = f; o2.frequency.value = f*1.5; env(g, t, .02, 2.6, .12); o.connect(g); o2.connect(g); g.connect(bus); o.start(t); o2.start(t); o.stop(t + 2.8); o2.stop(t + 2.8); }
+    function compose(){
+      seed = Math.floor(Math.random() * 1e9) + 1;
+      const scaleName = pick(Object.keys(SCALES)), scale = SCALES[scaleName];
+      const root = pick([261.63, 293.66, 329.63, 349.23, 392.00]);
+      const bpm = 76 + Math.floor(rnd() * 32);
+      const f = (deg, oct) => root * Math.pow(2, (scale[((deg % scale.length) + scale.length) % scale.length] + 12 * (Math.floor(deg / scale.length) + (oct || 0))) / 12);
+      // motif A (8 steps) and B, each step = 8th note; -1 = rest
+      const mk = () => { let d = Math.floor(rnd()*3); return Array.from({ length:8 }, (_, i) => { if (rnd() < .18 && i % 4 !== 0) return -1; d += pick([-2,-1,-1,0,1,1,2]); d = Math.max(0, Math.min(9, d)); return d; }); };
+      const A = mk(), B = mk();
+      const melody = [...A, ...A, ...B, ...A];
+      const arp = Array.from({ length:4 }, () => pick([0,2,4,7,9]));
+      const drumPat = pick([[1,0,0,1, 0,0,1,0], [1,0,1,0, 0,1,0,0], [1,0,0,0, 1,0,1,0]]);
+      const name = pick(NAMES) + ' (' + scaleName + ', ' + bpm + ' bpm)';
+      return { scale, root, bpm, f, melody, arp, drumPat, name, stepSec: 60 / bpm / 2 };
+    }
+    function tick(){
+      const c = ctx(); const t = c.currentTime + .06; const s = song;
+      const m = s.melody[step % s.melody.length];
+      if (m >= 0) ranat(s.f(m, 1), t, .55, .22 * (step % 8 === 0 ? 1.15 : 1));
+      if (step % 2 === 0) khim(s.f(s.arp[(step/2) % 4], 0), t, .07);
+      if (s.drumPat[step % 8]) thon(110, t, .14);
+      ching(t, step % 4 === 2);
+      if (step % 32 === 0){ pad(s.root / 2, t, 32 * s.stepSec); gong(s.root / 4, t); }
+      step++;
+    }
+    function start(){
+      if (!on || timer) return;
+      try{ setup(); song = compose(); step = 0; $('#tuneName').textContent = '♪ ' + song.name; tick(); timer = setInterval(tick, song.stepSec * 1000); }catch(e){}
+    }
+    function stop(){ clearInterval(timer); timer = null; $('#tuneName').textContent = ''; }
+    $('#tMusic').addEventListener('click', () => { on = !on; $('#tMusic').setAttribute('aria-pressed', on); $('#tMusic').textContent = on ? '🎵 Music on' : '🔇 Music off'; if (!on) stop(); else if (tRun) start(); });
+    return { start, stop };
+  })();
+  function chime(){
+    try{
+      ctx();
+      [0, .18, .36].forEach((t, i) => {
+        const o = actx.createOscillator(), g = actx.createGain();
+        o.type = 'sine'; o.frequency.value = [660, 880, 990][i];
+        g.gain.setValueAtTime(.0001, actx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(.25, actx.currentTime + t + .02);
+        g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + t + .3);
+        o.connect(g); g.connect(actx.destination); o.start(actx.currentTime + t); o.stop(actx.currentTime + t + .32);
+      });
+    }catch(e){}
+  }
+
+  /* =========== picker =========== */
+  const dlg = $('#picker');
+  let used = store.get('used', []);
+  const getNames = () => $('#names').value.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+  function renderChips(){
+    const box = $('#namechips'); box.innerHTML = '';
+    getNames().forEach(n => { const s = document.createElement('span'); s.textContent = n; if (used.includes(n)) s.className = 'used'; box.appendChild(s); });
+  }
+  $('#names').value = store.get('names', '');
+  $('#names').addEventListener('input', () => { store.set('names', $('#names').value); renderChips(); });
+  function openPicker(autoSpin){
+    if (LIVE && !getNames().length) fillJoined();
+    renderChips();
+    if (!dlg.open){ try{ dlg.showModal(); }catch(e){ dlg.setAttribute('open', ''); } }
+    if (autoSpin && getNames().length) spin();
+  }
+  function fillJoined(){
+    const names = Object.values(S.people);
+    if (!names.length){ toast('Nobody has joined yet'); return; }
+    $('#names').value = names.join('\n'); store.set('names', $('#names').value); renderChips();
+  }
+  let spinning = false;
+  function spin(){
+    const names = getNames();
+    if (!names.length){ $('#picked').textContent = 'Add some names first 👆'; return; }
+    if (spinning) return;
+    let pool = names.filter(n => !used.includes(n));
+    if (!pool.length){ used = []; pool = names.slice(); toast('Everyone has spoken. New round!'); }
+    const winner = pool[Math.floor(Math.random()*pool.length)];
+    const out = $('#picked'); spinning = true; out.classList.add('rolling');
+    let k = 0; const steps = reduce ? 1 : 16;
+    const tick = () => {
+      if (k < steps){ out.textContent = names[Math.floor(Math.random()*names.length)]; k++; setTimeout(tick, 50 + k*9); }
+      else { out.classList.remove('rolling'); out.textContent = winner + ' 🎤'; used.push(winner); store.set('used', used); renderChips(); spinning = false; burst(30); }
+    };
+    tick();
+  }
+  $('#spin').addEventListener('click', spin);
+  $('#useJoined').addEventListener('click', fillJoined);
+  $('#newRound').addEventListener('click', () => { used = []; store.set('used', used); renderChips(); $('#picked').textContent = ''; toast('New round started'); });
+  $('#closePick').addEventListener('click', () => dlg.close());
+  $('#tPick').addEventListener('click', () => openPicker(false));
+  $$('[data-pick]').forEach(b => b.addEventListener('click', () => openPicker(true)));
+
+  /* =========== join (participants) =========== */
+  const jd = $('#joinDlg');
+  function openJoin(){ $('#joinName').value = NAME; try{ jd.showModal(); }catch(e){ jd.setAttribute('open', ''); } setTimeout(() => $('#joinName').focus(), 50); }
+  function doJoin(){
+    const n = $('#joinName').value.trim();
+    if (!n){ $('#joinName').focus(); return; }
+    NAME = n.slice(0, 30); store.set('name', NAME); jd.close();
+    act('join', { name:NAME }); toast('Welcome, ' + NAME + '! 🛺');
+  }
+  $('#joinGo').addEventListener('click', doJoin);
+  $('#joinName').addEventListener('keydown', e => { if (e.key === 'Enter') doJoin(); });
+  jd.addEventListener('cancel', e => e.preventDefault());
+
+  /* =========== votes =========== */
+  function castVote(kind, value, i){
+    const id = voterId();
+    if (kind === 'game' || kind === 'd3'){ (S[kind][i] = S[kind][i] || {})[id] = value; }
+    else S[kind][id] = String(value);
+    renderAll();
+    if (LIVE) act('vote', { kind, value:String(value), i });
+  }
+  function clearPrefix(prefix){
+    const kind = prefix.replace(':', '');
+    if (kind === 'idea') S.ideas = [];
+    else if (kind === 'game' || kind === 'd3') S[kind] = {};
+    else S[kind] = {};
+    renderAll();
+    if (LIVE) act('clear', { prefix });
+  }
+  $$('[data-clear]').forEach(b => b.addEventListener('click', () => clearPrefix(b.dataset.clear)));
+  $('#tReset').addEventListener('click', () => {
+    if (!window.confirm('Clear all live votes, ideas and reactions in this room?')) return;
+    S = Object.assign(empty(), { people:S.people, nav:S.nav }); renderAll();
+    act('reset', {}); toast('Room cleared');
+  });
+  const count = obj => { const c = {}; Object.values(obj || {}).forEach(v => { c[v] = (c[v] || 0) + 1; }); return c; };
+  const mine = obj => LIVE ? (obj || {})[CID] : undefined;
+
+  // warm-up
+  function renderSpeeds(){
+    const c = count(S.speed); const vals = [0,1,2,3].map(k => c[k] || 0); const max = Math.max(1, ...vals);
+    $$('#speeds .speed').forEach((b, i) => {
+      b.querySelector('.bar i').style.width = (vals[i]/max*100) + '%';
+      b.querySelector('.count').textContent = vals[i] + (vals[i] === 1 ? ' person' : ' people');
+      b.classList.toggle('mine', mine(S.speed) === String(i));
+    });
+  }
+  $$('#speeds .speed').forEach((b, i) => b.addEventListener('click', () => { castVote('speed', i); floatEmoji(b.querySelector('.big').textContent, b); }));
+
+  // round 1
+  function renderR1(){
+    const c = count(S.r1);
+    $$('[data-r1]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r1] || 0); b.classList.toggle('mine', mine(S.r1) === b.dataset.r1); });
+  }
+  $$('[data-r1]').forEach(b => b.addEventListener('click', () => { castVote('r1', b.dataset.r1); floatEmoji(b.dataset.r1 === 'fast' ? '🙋' : '🤐', b); }));
+  function renderR2(){
+    const c = count(S.r2);
+    $$('[data-r2]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r2] || 0); b.classList.toggle('mine', mine(S.r2) === b.dataset.r2); });
+  }
+  $$('[data-r2]').forEach(b => b.addEventListener('click', () => { castVote('r2', b.dataset.r2); floatEmoji('😤', b); }));
+  function renderR3(){
+    const c = count(S.r3);
+    $$('[data-r3]').forEach(b => { b.querySelector('.n').textContent = (c[b.dataset.r3] || 0); b.classList.toggle('mine', mine(S.r3) === b.dataset.r3); });
+  }
+  $$('[data-r3]').forEach(b => b.addEventListener('click', () => { castVote('r3', b.dataset.r3); floatEmoji(b.dataset.r3 === 'l' ? '🇰🇷' : '🌍', b); }));
+
+  /* =========== speech (browser TTS) =========== */
+  let voiceOn = true, voices = [], chosenVoice = null;
+  const MALE_PREF = ['Guy Online (Natural)', 'Christopher Online (Natural)', 'Ryan Online (Natural)', 'Eric Online (Natural)', 'Andrew Online (Natural)', 'Brian Online (Natural)', 'Google UK English Male', 'Daniel', 'Alex', 'Microsoft David', 'Microsoft Mark', 'Microsoft George', 'Aaron', 'Fred', 'Rishi'];
+  function loadVoices(){
+    try{ voices = (speechSynthesis.getVoices() || []).filter(v => /^en/i.test(v.lang)); }catch(e){ voices = []; }
+    const sel = $('#fVoiceSel'); if (!sel) return;
+    const saved = store.get('voice', '');
+    sel.innerHTML = '';
+    if (!voices.length){ sel.innerHTML = '<option>No English voices found</option>'; return; }
+    const sorted = voices.slice().sort((x, y) => rankVoice(x) - rankVoice(y));
+    sorted.forEach(v => { const o = document.createElement('option'); o.value = v.name; o.textContent = v.name.replace('Microsoft ', '').replace(' Online (Natural)', ' (Natural)') + ' · ' + v.lang; sel.appendChild(o); });
+    chosenVoice = sorted.find(v => v.name === saved) || sorted[0];
+    sel.value = chosenVoice.name;
+  }
+  function rankVoice(v){ const i = MALE_PREF.findIndex(p => v.name.includes(p)); return i < 0 ? 99 : i; }
+  loadVoices(); try{ speechSynthesis.onvoiceschanged = loadVoices; }catch(e){}
+  $('#fVoiceSel').addEventListener('change', e => { chosenVoice = voices.find(v => v.name === e.target.value) || chosenVoice; store.set('voice', e.target.value); say('Hello, this is my voice.', 'me'); });
+  function techVoice(){
+    if (!chosenVoice) return null;
+    const alt = voices.filter(v => v !== chosenVoice && rankVoice(v) < 99).sort((x, y) => rankVoice(x) - rankVoice(y))[0];
+    return alt || chosenVoice;
+  }
+  function say(text, who){
+    return new Promise(res => {
+      if (!voiceOn || !('speechSynthesis' in window) || !text){ res(false); return; }
+      try{
+        const u = new SpeechSynthesisUtterance(text);
+        const style = { narr:{ rate:.92, pitch:.9 }, me:{ rate:1.0, pitch:1.0 }, tech:{ rate:1.04, pitch:1.25 }, scream:{ rate:1.25, pitch:1.1 }, soft:{ rate:.8, pitch:.95 } }[who] || { rate:1, pitch:1 };
+        u.rate = style.rate; u.pitch = style.pitch; u.volume = 1; u.lang = 'en-US';
+        const v = who === 'tech' ? techVoice() : chosenVoice; if (v) u.voice = v;
+        let done = false; const finish = () => { if (!done){ done = true; res(true); } };
+        u.onend = finish; u.onerror = finish;
+        setTimeout(finish, 1500 + text.length * 110); // safety net if the browser never fires onend
+        speechSynthesis.speak(u);
+      }catch(e){ res(false); }
+    });
+  }
+
+  /* =========== film (event-driven: next line starts when the voice finishes) =========== */
+  const film = (function(){
+    // [scene, caption, speaker, spoken text, action, pause after (ms)]
+    const script = [
+      ['city', 'Thailand. My first week. 🇹🇭', 'narr', 'Thailand. My very first week.', null, 500],
+      ['city', "No internet. A Korean's worst nightmare. 😱", 'narr', 'No internet. For a Korean? That is the worst nightmare.', () => $('#fNoWifi').classList.add('on'), 600],
+      ['call', 'Day 1. I called the internet company. 📞', 'narr', 'Day one. I called the internet company.', () => { clearB(); ring(); }, 900],
+      ['call', 'Day 1. I called the internet company. 📞', 'tech', 'Hello? Thai Internet, sawasdee krap!', () => bub('#fB2', 'Hello? Thai Internet, sawasdee krap! 😊'), 200],
+      ['call', 'Day 1. I called the internet company. 📞', 'me', 'Hi! I just moved in. When can you install the internet?', () => bub('#fB1', 'Hi! I just moved in. When can you install the internet?'), 200],
+      ['call', 'Day 1. I called the internet company. 📞', 'tech', 'Tomorrow, krap! No problem!', () => bub('#fB2', 'Tomorrow, krap! No problem! 😊'), 200],
+      ['call', 'Day 1. I called the internet company. 📞', 'me', 'Tomorrow? Great! Thank you so much!', () => bub('#fB1', 'Tomorrow? Great! Thank you so much! 🙏'), 600],
+      ['cal', 'Day 2. Nobody came.', 'narr', 'Day two. I waited all day. Nobody came.', () => day(2), 600],
+      ['call', 'Day 3. I called again. 📞', 'narr', 'Day three. I called again.', () => { clearB(); ring(); }, 900],
+      ['call', 'Day 3. I called again. 📞', 'tech', 'Hello? Thai Internet, sawasdee krap!', () => bub('#fB2', 'Hello? Thai Internet, sawasdee krap! 😊'), 200],
+      ['call', 'Day 3. I called again. 📞', 'me', "Hi, it's me again. You said... tomorrow?", () => bub('#fB1', "Hi, it's me again. You said… tomorrow? 😅"), 200],
+      ['call', 'Day 3. I called again. 📞', 'tech', 'Ah, yes, yes. Tomorrow! Mai pen rai!', () => bub('#fB2', 'Ah, yes, yes. Tomorrow! Mai pen rai! 😊'), 200],
+      ['call', 'Day 3. I called again. 📞', 'me', 'Mai... pen... rai?', () => bub('#fB1', 'Mai… pen… rai? 🤔'), 600],
+      ['inner', 'Outside: 🙂   Inside: 🌋', 'narr', 'Outside, I was smiling. Inside? A volcano.', null, 300],
+      ['inner', 'Outside: 🙂   Inside: 🌋', 'scream', 'Ppalli ppalli! Hurry up! Hurry up!', null, 500],
+      ['cal', 'Day 4… 5… 6…', 'narr', 'Day four. Day five. Day six.', () => { day(4); setTimeout(() => day(5), 900); setTimeout(() => day(6), 1800); }, 500],
+      ['door', 'Day 7. Ding-dong! 🔔', 'narr', 'Day seven. Ding dong!', () => doorbell(), 600],
+      ['door', 'Day 7. Ding-dong! 🔔', 'tech', 'Sawasdee krap! Internet! Mai pen rai!', () => { $('#fB3').textContent = 'Sawasdee krap! Internet! 🙏'; }, 500],
+      ['wifi', 'The internet finally worked. 📶', 'narr', 'And finally... the internet worked.', null, 400],
+      ['wifi', 'The internet finally worked. 📶', 'soft', 'Mai pen rai.', null, 700],
+      ['end', '', 'narr', 'The end. Or maybe... the beginning of my mai pen rai life.', null, 0]
+    ];
+    let li = 0, playing = false, token = 0;
+    function bub(sel, text){ $$('#film .f-bub').forEach(b => b.classList.remove('speaking')); const b = $(sel); b.textContent = text; b.classList.add('on', 'speaking'); }
+    function clearB(){ ['#fB1', '#fB2'].forEach(s => $(s).classList.remove('on', 'speaking')); }
+    function day(n){ const d = $('#fDay'); d.textContent = n; d.classList.remove('flip'); void d.offsetWidth; d.classList.add('flip'); }
+    function scene(name){ $$('#film .scene').forEach(s => s.classList.toggle('on', s.dataset.s === name)); }
+    function cap(t){ const c = $('#fCap'); if (t){ c.textContent = t; c.classList.add('on'); } else c.classList.remove('on'); }
+    function tone(f, t0, dur, type, gain){ try{ const c = ctx(); const o = c.createOscillator(), g = c.createGain(); o.type = type || 'sine'; o.frequency.value = f; g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(gain || .15, t0 + .02); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur); o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0 + dur + .05); }catch(e){} }
+    function ring(){ try{ const t = ctx().currentTime; [0, 1.1].forEach(off => { for (let i = 0; i < 20; i++){ tone(440, t + off + i*.04, .035, 'square', .05); tone(480, t + off + i*.04 + .02, .035, 'square', .05); } }); }catch(e){} }
+    function doorbell(){ try{ const t = ctx().currentTime; tone(659, t, .6, 'sine', .2); tone(523, t + .45, .9, 'sine', .2); }catch(e){} }
+    function reset(){
+      li = 0; token++; clearB(); $('#fNoWifi').classList.remove('on'); $('#fDay').textContent = 2;
+      scene('city'); cap(''); $('#fBar').style.width = '0%'; try{ speechSynthesis.cancel(); }catch(e){}
+    }
+    async function run(myToken){
+      while (playing && myToken === token && li < script.length){
+        const s = script[li];
+        scene(s[0]); cap(s[1]); if (s[4]) s[4]();
+        $('#fBar').style.width = Math.round((li+1)/script.length*100) + '%';
+        const spoke = await say(s[3], s[2]);
+        if (!spoke) await wait(900 + s[3].length * 60); // no voice: read along at a natural pace
+        await wait(s[5]);
+        if (myToken !== token) return;
+        li++;
+      }
+      if (myToken === token && li >= script.length) stop(true);
+    }
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    function play(){
+      if (playing) return;
+      if (li >= script.length) reset();
+      try{ ctx(); }catch(e){}
+      playing = true; $('#fPlay').hidden = true; $('#fToggle').textContent = 'Pause';
+      run(++token);
+    }
+    function stop(ended){
+      playing = false; token++;
+      try{ speechSynthesis.cancel(); }catch(e){}
+      $('#fToggle').textContent = ended ? 'Play again' : 'Resume';
+      if (ended){ li = script.length; $('#fPlay').hidden = false; $('#fPlay').textContent = '↺ Play again'; $('#fBar').style.width = '100%'; }
+    }
+    $('#fPlay').addEventListener('click', play);
+    $('#fToggle').addEventListener('click', () => playing ? stop(false) : play());
+    $('#fReplay').addEventListener('click', () => { stop(false); reset(); play(); });
+    $('#fVoice').addEventListener('click', () => { voiceOn = !voiceOn; $('#fVoice').setAttribute('aria-pressed', voiceOn); $('#fVoice').textContent = voiceOn ? '🔊 Voice on' : '🔇 Voice off'; if (!voiceOn){ try{ speechSynthesis.cancel(); }catch(e){} } });
+    reset(); $('#fToggle').textContent = 'Play';
+    return { pause: () => { if (playing) stop(false); } };
+  })();
+
+  /* =========== video modal =========== */
+  const vd = $('#videoDlg');
+  function openVideo(id){
+    $('#vframe').innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1" title="YouTube video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    $('#vOpen').href = 'https://www.youtube.com/shorts/' + id;
+    try{ vd.showModal(); }catch(e){ vd.setAttribute('open', ''); }
+  }
+  function closeVideo(){ $('#vframe').innerHTML = ''; vd.close(); }
+  $$('[data-video]').forEach(b => b.addEventListener('click', () => openVideo(b.dataset.video)));
+  void openVideo;
+  $('#vClose').addEventListener('click', closeVideo);
+  vd.addEventListener('close', () => { $('#vframe').innerHTML = ''; });
+
+
+  /* =========== game =========== */
+  const PDI = { title:'Power distance index: how normal does hierarchy feel? (0 to 100)', src:'The Culture Factor (Hofstede Insights) country comparison, as published 2024. A 2023 re-survey by NIDA Business School found Thai respondents had dropped to 40.', max:100,
+    bars:[['Germany',35],['Netherlands',38],['United States',40],['Japan',54],['Korea',60,true],['Thailand',64]] };
+  const IDV = { title:'Individualism index: individualist cultures tend to say things more explicitly (0 to 100)', src:'The Culture Factor (Hofstede Insights) country comparison, as published 2024', max:100,
+    bars:[['Korea',18,true],['Thailand',20],['Japan',46],['Germany',67],['Netherlands',80],['United States',91]] };
+  const sits = [
+    ['Your company introduces English nicknames. From Monday, 팀장님 is "Daniel." How do you feel?',
+     'Still 팀장님 in my head', 'Daniel! Finally.',
+     'Several Korean companies have tried this. Some love the flat feeling. Some just whisper "Daniel 님." A name tag does not change a culture overnight. 😅', 'Dial 3: Hierarchy 🎩',
+     { title:'LG Uplus staff vote, five years after switching to "님" (2023)', src:'LG Uplus internal vote of 206 employees, May 2023. Also in 2023: Samsung Electronics asked staff to call its chairman "JY" or "재용님" instead of 회장님.', max:100,
+       bars:[['Actively use "님" with everyone',61.6,true],['Want to use it but still can\'t',38.4]] }],
+    ['A colleague overseas asks, "Can you finish this by Friday?" You know it is impossible. What do you say?',
+     '"Yes, I\'ll try my best."', '"No, Friday is not possible."',
+     'A soft "yes" protects the relationship today and creates a surprise on Friday. A clear "no" feels rude today and saves everyone next week. Which rule were you raised with? 🤔', 'Dial 1: Speaking 🗣️', IDV],
+    ['The workshop is running 15 minutes over, but the discussion is great. What do you do?',
+     'Stop. People have plans.', 'Let it run. This is gold.',
+     'In Thailand: mai pen rai, keep talking. In Germany: the schedule wins. In Korea: we cut it, then run to lunch. ⏰', 'Dial 5: Time ⏰',
+     { title:'Average hours worked per person per year (2025)', src:'OECD Employment Outlook data, released July 2026', max:2300,
+       bars:[['Germany',1332],['Japan',1598],['OECD average',1736],['United States',1800],['Korea',1833,true],['Mexico',2205]] }],
+    ['A foreign colleague says, in front of everyone: "Honestly, your slides were confusing."',
+     'Ouch. Say it privately next time.', 'Thank you! Finally some honesty.',
+     'In the Netherlands or Germany, this is normal help. In Korea, Japan, or Thailand, it can feel like an attack. Same words, different weight. 🎯', 'Dial 2: Feedback 🎯',
+     { title:'How directly do cultures give negative feedback? (most direct to most indirect)', src:'Erin Meyer (INSEAD), The Culture Map, Evaluating scale. Still the standard reference used by cross-cultural trainers in 2023 to 2025; no newer survey ranks these countries.', rank:['Netherlands','Germany','United States','United Kingdom','Korea','Japan','Thailand'] }],
+    ['After the workshop, the overseas host invites everyone for drinks.',
+     'Go. Relationships are built after hours.', 'Go home. The workshop was the work.',
+     'The 회식 debate, global edition. In some cultures trust is built over dinner, in others over deadlines. 🍻', 'Dial 4: Trust 🤝',
+     { title:'Korean workers who prefer "lunch, no alcohol" over "evening with drinks," by age (2022)', src:'Incruit survey of 1,013 workers, 2022 (overall: lunch 45.8% vs. evening drinks 29.7%). A 2024 Handok survey of 124 office workers: 70% see evening 회식 as an extension of work.', max:100,
+       bars:[['In their 20s',65.6],['In their 30s',71.2],['In their 40s',45.3],['50 and older',31.3]] }],
+    ['During a group exercise, a junior colleague openly disagrees with your idea.',
+     'Fine, but tell me privately first', "Great! That's exactly what we want.",
+     'Hierarchy is a dial, not a rule. Korea is moving, but how fast? Ask the juniors in this room. 😏', 'Dial 3: Hierarchy 🎩', PDI]
+  ];
+  function renderFact(f){
+    const box = $('#fact'); if (!f){ box.hidden = true; return; }
+    let h = '<p class="fact-title">📊 ' + f.title + '</p>';
+    if (f.rank){
+      h += '<div class="rank">' + f.rank.map(n => '<span class="' + (n === 'Korea' ? 'kr' : '') + '">' + n + '</span>').join('<i>›</i>') + '</div>';
+    } else {
+      h += '<div class="fbars">' + f.bars.map(b => '<div class="fbar' + (b[2] ? ' kr' : '') + '"><span class="fl">' + b[0] + '</span><span class="ft"><i style="width:' + (b[1]/f.max*100) + '%"></i></span><span class="fv">' + (f.max === 100 ? b[1] + (f.title.includes('index') ? '' : '%') : b[1].toLocaleString()) + '</span></div>').join('') + '</div>';
+    }
+    h += '<p class="fact-src">Source: ' + f.src + '</p>';
+    box.innerHTML = h; box.hidden = false;
+  }
+  let si = 0, revealed = false;
+  const dots = $('#sitDots');
+  sits.forEach(() => dots.appendChild(document.createElement('span')));
+  function renderSit(){
+    $('#sitText').textContent = sits[si][0];
+    $('#optA').textContent = 'A. ' + sits[si][1]; $('#optB').textContent = 'B. ' + sits[si][2];
+    $('#dialTag').textContent = sits[si][4];
+    $('#sitNo').textContent = 'Situation ' + (si+1) + ' of ' + sits.length;
+    const c = count(S.game[si]); const a = c.slow || 0, b = c.fast || 0, t = a + b;
+    $('#nSlow').textContent = a; $('#nFast').textContent = b;
+    $('#splitA').style.width = t ? (a/t*100) + '%' : '50%';
+    $('#splitB').style.width = t ? (b/t*100) + '%' : '50%';
+    let h = 'Waiting for votes…';
+    if (t){
+      const p = b/t*100;
+      if (t >= 2 && Math.abs(p - 50) <= 20) h = '🔥 The room is split. Perfect. Let\'s hear both sides!';
+      else h = p > 50 ? 'Mostly B. Anyone brave enough to pick A?' : 'Mostly A. Any B rebels in the room?';
+    }
+    $('#heat').textContent = h;
+    $('#take').textContent = sits[si][3]; $('#take').classList.toggle('on', revealed);
+    renderFact(revealed ? sits[si][5] : null);
+    Array.from(dots.children).forEach((d, i) => d.classList.toggle('on', i === si));
+    const my = LIVE && S.game[si] ? S.game[si][CID] : undefined;
+    $('#vSlow').classList.toggle('mine', my === 'slow'); $('#vFast').classList.toggle('mine', my === 'fast');
+  }
+  $('#vSlow').addEventListener('click', e => { castVote('game', 'slow', si); floatEmoji('🕊️', e.currentTarget); });
+  $('#vFast').addEventListener('click', e => { castVote('game', 'fast', si); floatEmoji('🗣️', e.currentTarget); });
+  $('#sitReveal').addEventListener('click', () => { revealed = true; renderSit(); pushNav(); });
+  $('#sitNext').addEventListener('click', () => { si = (si+1) % sits.length; revealed = false; renderSit(); pushNav(); });
+  $('#sitPrev').addEventListener('click', () => { si = (si-1+sits.length) % sits.length; revealed = false; renderSit(); pushNav(); });
+
+  /* =========== dials diagram =========== */
+  (function(){
+    const dials = [
+      { n:'1. Speaking', l:'Say it directly 🗣️', r:'Read the air 👂', pts:[['Netherlands',8],['United States',18],['Germany',24],['Thailand',84],['Japan',92]], kr:76 },
+      { n:'2. Feedback', l:'Frank 🎯', r:'Softened 🍬', pts:[['Netherlands',6],['Germany',14],['United States',40],['Thailand',86],['Japan',92]], kr:72 },
+      { n:'3. Hierarchy', l:'Flat: the boss is "Anna" 🙋', r:'Steep: the boss is 팀장님 🎩', pts:[['Sweden',6],['Netherlands',14],['United States',34],['Japan',78],['China',90]], kr:82 },
+      { n:'4. Trust', l:'Built through work 📋', r:'Built through meals 🍲', pts:[['United States',10],['Germany',18],['Japan',58],['Thailand',78],['China',90]], kr:70 },
+      { n:'5. Time', l:'By the clock ⏰', r:'Flexible 🌊', pts:[['Germany',6],['Japan',12],['United States',26],['Thailand',84],['Mexico',92]], kr:40 }
+    ];
+    const host = $('#dials'); if (!host) return;
+    dials.forEach(d => {
+      const row = document.createElement('div'); row.className = 'drow step';
+      const dots = d.pts.map((p, i) => '<div class="dot2 ' + (i % 2 ? 'below' : 'above') + '" style="left:' + p[1] + '%"><i></i><span>' + p[0] + '</span></div>').join('');
+      row.innerHTML = '<div class="dname">' + d.n + '</div>' +
+        '<div class="dbody"><div class="dends"><span>' + d.l + '</span><span>' + d.r + '</span></div>' +
+        '<div class="dline"><div class="dgrad"></div>' + dots + '<div class="dot2 kr" style="left:' + d.kr + '%"><i>🇰🇷</i><span>Korea</span></div></div></div>';
+      host.appendChild(row);
+    });
+  })();
+
+  /* =========== round 3: four design decisions =========== */
+  const decs = [
+    { tag:'1. Content', q:'Do overseas colleagues need the same competencies as our Korean colleagues?',
+      opts:[['same','Same core, same program'],['core','Same core, different skills'],['diff','Different from the start']],
+      take:"If you chose 'different from the start,' what part of SK still has to be in it? If you chose 'same,' who decided the core?" },
+    { tag:'2. Language', q:'All our materials are in Korean. What do we do?',
+      opts:[['translate','Translate what we have'],['english','Build new materials in English'],['mix','Mix: translate the core, make local examples']],
+      take:'Translation is cheap and fast. But 패기 and 눈치 do not translate. What happens to them in an English version?' },
+    { tag:'3. Trainer', q:'Who runs the sessions?',
+      opts:[['interp','Korean trainer with an interpreter'],['local','A local trainer we train first'],['both','Korean and local trainer together']],
+      take:'With an interpreter, every sentence takes twice as long and half the jokes die. A local trainer has to learn SK first. Which cost do we pay?' },
+    { tag:'4. Obstacle', q:'What will be the biggest obstacle?',
+      opts:[['lang','Language'],['hier','Hierarchy and discussion style'],['time','Time zones and schedules'],['trust','Trust and relationships']],
+      take:'Look at the five dials again. Did we pick the dial we are weakest on, or the one that is easiest to blame?' }
+  ];
+  let di = 0, drevealed = false;
+  const ddots = $('#decDots');
+  if (ddots) decs.forEach(() => ddots.appendChild(document.createElement('span')));
+  function renderDec(){
+    if (!$('#decText')) return;
+    const d = decs[di];
+    $('#decNo').textContent = 'Decision ' + (di+1) + ' of ' + decs.length;
+    $('#decTag').textContent = d.tag; $('#decText').textContent = d.q;
+    const c = count(S.d3[di]); const total = Object.values(c).reduce((a, b) => a + b, 0); const my = LIVE && S.d3[di] ? S.d3[di][CID] : undefined;
+    const maxv = Math.max(1, ...Object.values(c));
+    const box = $('#decOpts'); box.innerHTML = '';
+    d.opts.forEach(([id, label]) => {
+      const n = c[id] || 0; const pct = total ? Math.round(n/total*100) : 0;
+      const b = document.createElement('button'); b.className = 'dopt' + (my === id ? ' mine' : '') + (drevealed && n === maxv && n > 0 ? ' win' : '');
+      b.innerHTML = '<span class="dl2">' + label + '</span><span class="dbar"><i style="width:' + (total ? n/maxv*100 : 0) + '%"></i></span><span class="dn">' + n + (total ? ' (' + pct + '%)' : '') + '</span>';
+      b.addEventListener('click', () => { castVote('d3', id, di); floatEmoji('🗳️', b); });
+      box.appendChild(b);
+    });
+    $('#decTake').textContent = d.take; $('#decTake').classList.toggle('on', drevealed);
+    Array.from(ddots.children).forEach((x, i) => x.classList.toggle('on', i === di));
+  }
+  if ($('#decNext')){
+    $('#decNext').addEventListener('click', () => { di = (di+1) % decs.length; drevealed = false; renderDec(); pushNav(); });
+    $('#decPrev').addEventListener('click', () => { di = (di-1+decs.length) % decs.length; drevealed = false; renderDec(); pushNav(); });
+    $('#decReveal').addEventListener('click', () => { drevealed = true; renderDec(); pushNav(); });
+  }
+  $$('.wcard').forEach(w => w.addEventListener('click', () => w.classList.toggle('on')));
+
+  /* =========== count-up =========== */
+  function countUp(root){
+    root.querySelectorAll('.count').forEach(el => {
+      const to = +el.dataset.to;
+      if (reduce){ el.textContent = to; return; }
+      const t0 = performance.now(), dur = 1400;
+      const step = now => { const p = Math.min(1, (now - t0)/dur), e = 1 - Math.pow(1-p, 3); el.textContent = Math.round(to*e); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* =========== gauge (round 2) =========== */
+  function renderGauge(){
+    if (!$('#needle')) return;
+    const c = count(S.gauge); const a = c['-1'] || 0, m = c['0'] || 0, b = c['1'] || 0, total = a + m + b;
+    $$('.gv').forEach(btn => { btn.querySelector('.n').textContent = c[btn.dataset.g] || 0; btn.classList.toggle('mine', mine(S.gauge) === btn.dataset.g); });
+    const avg = total ? (b - a)/total : 0;
+    $('#needle').style.transform = 'rotate(' + (avg*80) + 'deg)';
+    let v = 'Vote to move the needle.';
+    if (total){
+      if (avg <= -0.34) v = '👂 The room says: the signals were there. We just missed them.';
+      else if (avg >= 0.34) v = '🗣️ The room says: clear words, please. Is that fair to everyone?';
+      else v = '🤝 The room says: everyone adapts a little. Who starts?';
+    }
+    $('#verdict').textContent = v;
+  }
+  $$('.gv').forEach(b => b.addEventListener('click', () => castVote('gauge', b.dataset.g)));
+
+  /* =========== balance (round 3) =========== */
+  function renderBalance(){
+    if (!$('#beam')) return;
+    const L = S.ideas.filter(x => x.s === 'l'), R = S.ideas.filter(x => x.s === 'r');
+    const fill = (el, list) => {
+      el.innerHTML = '';
+      list.slice(-14).forEach(x => {
+        const sp = document.createElement('span'); sp.textContent = x.t; sp.title = 'Tap to remove';
+        if (!LIVE || x.c === CID || PRESENTER){ sp.classList.add('rm'); sp.addEventListener('click', () => removeIdea(x)); }
+        el.appendChild(sp);
+      });
+    };
+    fill($('#panL'), L); fill($('#panR'), R);
+    const diff = R.length - L.length;
+    const ang = Math.max(-14, Math.min(14, diff*3));
+    $('#beam').style.transform = 'rotate(' + ang + 'deg)';
+    const w = $('#beam').getBoundingClientRect().width || 600;
+    const dy = Math.sin(ang*Math.PI/180) * (w*0.36);
+    $('#panL').style.transform = 'translateY(' + (-dy) + 'px)';
+    $('#panR').style.transform = 'translateY(' + dy + 'px)';
+    let s;
+    if (!L.length && !R.length) s = 'Nothing sorted yet';
+    else if (diff === 0) s = '📘 Explain ' + L.length + ', 🧹 stop ' + R.length + '. Perfectly balanced.';
+    else if (diff < 0) s = '📘 Explain ' + L.length + ', 🧹 stop ' + R.length + '. That\'s a long guide for week one!';
+    else s = '📘 Explain ' + L.length + ', 🧹 stop ' + R.length + '. Brave. Are we sure we can change them?';
+    $('#balStatus').textContent = s;
+    const mineIdeas = S.ideas.filter(x => !LIVE || x.c === CID);
+    $$('.ex.rule').forEach(b => { const l = mineIdeas.some(x => x.t === b.textContent && x.s === 'l'), r = mineIdeas.some(x => x.t === b.textContent && x.s === 'r'); b.classList.toggle('as-l', l); b.classList.toggle('as-r', r); });
+  }
+  function ideaId(cid, side, text){ let h = 5381; const str = cid + '|' + side + '|' + text; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0; return 'i' + h.toString(36); }
+  function removeIdea(x){
+    S.ideas = S.ideas.filter(y => y !== x && y.id !== x.id);
+    renderAll();
+    if (LIVE && x.id) act('unidea', { id:x.id });
+  }
+  function addIdea(side, text){
+    text = (text || '').trim().slice(0, 80); if (!text) return false;
+    const c = LIVE ? CID : 'local'; const id = ideaId(c, side, text);
+    S.ideas = S.ideas.filter(y => y.id !== id);
+    S.ideas.push({ s:side, t:text, c, id, ts:Date.now() });
+    renderAll();
+    if (LIVE) act('idea', { side, text, name:NAME });
+    return true;
+  }
+  function addFromInput(side){
+    const inp = $('#inL');
+    if (addIdea(side, inp.value)){ inp.value = ''; } inp.focus();
+  }
+  if ($('#addL')){
+    $('#addL').addEventListener('click', () => addFromInput('l'));
+    $('#addR').addEventListener('click', () => addFromInput('r'));
+    $('#inL').addEventListener('keydown', e => { if (e.key === 'Enter') addFromInput('l'); });
+  }
+
+  $$('.ex.rule').forEach(b => b.addEventListener('click', () => {
+    const minePred = x => x.t === b.textContent && (!LIVE || x.c === CID);
+    const asL = S.ideas.find(x => minePred(x) && x.s === 'l'), asR = S.ideas.find(x => minePred(x) && x.s === 'r');
+    if (asL){ removeIdea(asL); addIdea('r', b.textContent); floatEmoji('🧹', b); }
+    else if (asR){ removeIdea(asR); }
+    else { addIdea('l', b.textContent); floatEmoji('📘', b); }
+  }));
+  window.addEventListener('resize', renderBalance);
+
+  /* =========== mix =========== */
+  const mixes = [
+    [20, '🇹🇭', 'Thailand: Kreng jai', 'You never want to make anyone uncomfortable. Harmony first, always.'],
+    [40, '🇰🇷', 'Korea: Nunchi', 'You read the room before you speak. Very 눈치.'],
+    [60, '🇸🇪', 'Sweden: Lagom', 'Honest but gentle. Not too blunt, not too quiet.'],
+    [80, '🇺🇸', 'United States: Straight talk', 'You say what you think, with a smile and a “great question.”'],
+    [101, '🇳🇱', 'Netherlands: Dutch directness', '“Your idea is bad, here is why.” No hard feelings!']
+  ];
+  const mixFor = v => mixes.find(x => v < x[0]);
+  // score: share of 빨리빨리 choices. who = a voter id, or null for "everyone"
+  function scoreFor(who){
+    const vals = [], parts = [];
+    const pick = obj => who === null ? Object.values(obj || {}) : ((obj || {})[who] !== undefined ? [obj[who]] : []);
+    let gf = 0, gt = 0;
+    Object.keys(S.game).forEach(q => pick(S.game[q]).forEach(v => { gt++; if (v === 'fast'){ gf++; vals.push(100); } else vals.push(0); }));
+    if (who !== null && gt) parts.push('Game: ' + gf + ' of ' + gt + ' answers were B');
+    const r1 = pick(S.r1);
+    r1.forEach(v => vals.push(v === 'fast' ? 100 : 0));
+    if (who !== null && r1.length) parts.push('Round 1: ' + (r1[0] === 'fast' ? '🙋 speaks up' : '🤐 talks later'));
+    const pct = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0)/vals.length) : null;
+    return { pct, n:vals.length, parts };
+  }
+  let sliderTouched = false;
+  function renderMix(){
+    const personal = LIVE && !PRESENTER;
+    const sc = scoreFor(personal ? CID : null);
+    const adj = personal && S.mix[CID] !== undefined ? +S.mix[CID] : null;
+    const val = adj !== null ? adj : (sc.pct !== null ? sc.pct : 50);
+    const m = mixFor(val);
+    const em = $('#mixEm');
+    if (em.textContent !== m[1]){ em.textContent = m[1]; if (!reduce){ em.style.transform = 'scale(1.25)'; setTimeout(() => em.style.transform = '', 220); } }
+    $('#mixLabel').textContent = m[2];
+    if (sc.pct === null) $('#mixPct').textContent = personal ? 'Make a few choices first, then come back here.' : 'No votes yet. Votes from this screen will show up here.';
+    else $('#mixPct').textContent = (personal ? 'You are ' : 'The room is ') + sc.pct + '% direct, based on ' + sc.n + (sc.n === 1 ? ' choice' : ' choices') + (adj !== null ? '. You adjusted it to ' + adj + '%.' : '.');
+    const pb = $('#mixParts'); pb.innerHTML = '';
+    sc.parts.forEach(p => { const s = document.createElement('span'); s.textContent = p; pb.appendChild(s); });
+    if (!sliderTouched || document.activeElement !== $('#mixRange')) $('#mixRange').value = val;
+    $('#mixDesc').textContent = m[3] + (personal ? ' Not you? Drag the slider.' : '');
+    $('#mixRange').disabled = !personal;
+    $('#mixRange').style.display = personal ? '' : 'none';
+    renderTrack();
+  }
+  function renderTrack(){
+    const box = $('#tally'); box.innerHTML = '';
+    const people = [];
+    if (LIVE){
+      Object.keys(S.people).forEach(id => {
+        const sc = scoreFor(id); const v = S.mix[id] !== undefined ? +S.mix[id] : sc.pct;
+        if (v !== null && v !== undefined) people.push({ name:S.people[id], v, me:id === CID });
+      });
+    } else { const sc = scoreFor(null); if (sc.pct !== null) people.push({ name:'This room', v:sc.pct }); }
+    const total = people.length;
+    $('#trackTitle').textContent = 'Passports in this room' + (LIVE ? ' (' + total + ' people)' : '');
+    mixes.forEach(m => {
+      const who = people.filter(p => mixFor(p.v) === m);
+      const pct = total ? Math.round(who.length/total*100) : 0;
+      const row = document.createElement('div'); row.className = 'trow' + (who.length ? ' has' : '');
+      row.innerHTML = '<span class="tem">' + m[1] + '</span><span class="tname">' + m[2] + '</span>' +
+        '<span class="tbar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="tnum">' + who.length + (who.length === 1 ? ' person' : ' people') + ', ' + pct + '%</span>' +
+        (PRESENTER && LIVE && who.length ? '<span class="tnames">' + who.map(p => p.name).join(', ') + '</span>' : '');
+      box.appendChild(row);
+    });
+    if (!total){ const p = document.createElement('p'); p.className = 'ko'; p.textContent = 'No passports yet. Answer the game questions first.'; box.appendChild(p); }
+  }
+  $('#mixRange').addEventListener('input', () => { sliderTouched = true; const v = +$('#mixRange').value; S.mix[CID] = String(v); renderMix(); });
+  $('#mixRange').addEventListener('change', () => { if (LIVE) act('vote', { kind:'mix', value:$('#mixRange').value }); });
+
+  /* =========== reactions & fx =========== */
+  function renderReact(){
+    const t = Object.values(S.react).reduce((a, b) => a + b, 0);
+    $('#reactCount').textContent = t + (t === 1 ? ' reaction' : ' reactions') + (t ? ': ' + Object.keys(S.react).map(e => e + ' ' + S.react[e]).join('  ') : '');
+  }
+  $$('.react').forEach(b => b.addEventListener('click', () => {
+    S.react[b.dataset.e] = (S.react[b.dataset.e] || 0) + 1; renderReact();
+    if (LIVE) act('react', { e:b.dataset.e });
+    for (let i = 0; i < 3; i++) setTimeout(() => floatEmoji(b.dataset.e, b), i*120);
+  }));
+  $('#confettiBtn').addEventListener('click', () => burst(140));
+  function floatEmoji(ch, from){
+    if (reduce || !from) return;
+    const r = from.getBoundingClientRect();
+    const s = document.createElement('span'); s.className = 'floaty'; s.textContent = ch;
+    s.style.left = (r.left + r.width/2 - 16 + (Math.random()*40 - 20)) + 'px'; s.style.top = r.top + 'px';
+    $('#fx').appendChild(s);
+    if (!s.animate){ s.remove(); return; }
+    const an = s.animate([{ transform:'translateY(0) scale(.6)', opacity:1 }, { transform:'translateY(-220px) scale(1.3) rotate(' + (Math.random()*40 - 20) + 'deg)', opacity:0 }], { duration:1400, easing:'cubic-bezier(.2,.8,.2,1)' });
+    an.onfinish = () => s.remove();
+  }
+  function burst(n){
+    if (reduce) return;
+    const colors = ['#F2357F','#FFB21E','#0F8C76','#7B6CFF','#5BC0EB'];
+    const W = window.innerWidth, H = window.innerHeight;
+    for (let i = 0; i < n; i++){
+      const p = document.createElement('i'); const size = 6 + Math.random()*8;
+      p.style.cssText = 'position:absolute;top:-20px;left:' + (Math.random()*W) + 'px;width:' + size + 'px;height:' + (size*.5) + 'px;background:' + colors[i % colors.length] + ';border-radius:2px';
+      $('#fx').appendChild(p);
+      if (!p.animate){ p.remove(); continue; }
+      const an = p.animate([{ transform:'translate(0,0) rotate(0)' }, { transform:'translate(' + ((Math.random() - .5)*240) + 'px,' + (H + 40) + 'px) rotate(' + (Math.random()*720) + 'deg)' }], { duration:1800 + Math.random()*1400, delay:Math.random()*400, easing:'cubic-bezier(.25,.6,.4,1)', fill:'forwards' });
+      an.onfinish = () => p.remove();
+    }
+  }
+
+  /* =========== slide enter =========== */
+  function onEnter(s, prevSlide){
+    if (prevSlide && prevSlide.dataset.id === 'film') film.pause();
+    if (s.dataset.id === 'data') countUp(s);
+    if (s.dataset.id === 'closing') setTimeout(() => burst(160), 350);
+    if (s.querySelector('#beam')) setTimeout(renderBalance, 60);
+  }
+
+  function renderAll(){ renderSpeeds(); renderR1(); renderR2(); renderR3(); renderSit(); renderDec(); renderGauge(); renderBalance(); renderMix(); renderReact(); setLive(LIVE); }
+
+  /* =========== presenter join box / link =========== */
+  function participantUrl(){ return location.origin + '/' + (ROOM !== 'main' ? '?room=' + ROOM : ''); }
+  function showJoinBox(){
+    if (!PRESENTER || !LIVE) return;
+    const url = participantUrl();
+    $('#joinBox').hidden = false;
+    $('#joinUrl').textContent = url.replace(/^https?:\/\//, '');
+    try{ if (window.QRCode){ $('#qr').innerHTML = ''; new window.QRCode($('#qr'), { text:url, width:240, height:240 }); } }catch(e){}
+    const lb = $('#tLink'); lb.hidden = false;
+    lb.onclick = () => { try{ navigator.clipboard.writeText(url).then(() => toast('Copied: ' + url), () => toast(url)); }catch(e){ toast(url); } };
+    $('#tReset').hidden = false;
+  }
+
+  /* =========== start =========== */
+  async function init(){
+    try{
+      const r = await fetch('/api/state?room=' + encodeURIComponent(ROOM), { cache:'no-store' });
+      if (r.ok){ const j = await r.json(); if (j && j.ok){ LIVE = true; S = parseHash(j.h || {}); } }
+    }catch(e){}
+    if (LIVE){
+      setInterval(poll, 2000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+      if (PRESENTER){ showJoinBox(); pushNav(true); }
+      else {
+        fb.hidden = false;
+        if (!NAME) openJoin(); else act('join', { name:NAME });
+        applyRemoteNav();
+      }
+    }
+    renderAll();
+  }
+  const h = parseInt((location.hash || '').slice(1), 10);
+  go(h >= 1 && h <= slides.length ? h-1 : 0, true);
+  renderAll();
+  init();
+})();
+</script>
+</body>
+</html>
