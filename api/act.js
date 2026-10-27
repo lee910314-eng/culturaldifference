@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
   const cid = clean(b.cid, 24).replace(/[^a-zA-Z0-9]/g, '');
   if (!cid) return res.status(400).json({ ok: false, error: 'Missing client id.' });
 
-  const hostOnly = ['nav', 'reset', 'clear'];
+  const hostOnly = ['nav', 'reset', 'clear', 'kick', 'kickall'];
   if (hostOnly.includes(b.op) && process.env.PRESENTER_KEY && b.key !== process.env.PRESENTER_KEY) {
     return res.status(401).json({ ok: false, error: 'Presenter key required.' });
   }
@@ -74,6 +74,26 @@ module.exports = async (req, res) => {
         const arr = (r && r.result) || [];
         const del = [];
         for (let i = 0; i < arr.length; i += 2) if (!/^(people:|nav$)/.test(arr[i])) del.push(arr[i]);
+        if (del.length) cmds.push(['HDEL', key, ...del]);
+        else return res.json({ ok: true });
+        break;
+      }
+      case 'kick': {
+        const id = clean(b.id, 24).replace(/[^a-zA-Z0-9]/g, '');
+        if (!id) break;
+        const [r] = await pipe([['HGETALL', key]]);
+        const arr = (r && r.result) || [];
+        const del = [];
+        for (let i = 0; i < arr.length; i += 2) if (arr[i] === 'people:' + id || arr[i].endsWith(':' + id)) del.push(arr[i]);
+        if (del.length) cmds.push(['HDEL', key, ...del]);
+        else return res.json({ ok: true });
+        break;
+      }
+      case 'kickall': {
+        const [r] = await pipe([['HGETALL', key]]);
+        const arr = (r && r.result) || [];
+        const del = [];
+        for (let i = 0; i < arr.length; i += 2) if (arr[i] !== 'nav') del.push(arr[i]);
         if (del.length) cmds.push(['HDEL', key, ...del]);
         else return res.json({ ok: true });
         break;
