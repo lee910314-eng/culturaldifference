@@ -585,6 +585,12 @@ button.style-card:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(-
 .navbtn:disabled,.btn:disabled{opacity:.35;cursor:default;transform:none}
 .thanks-en{display:block;font-size:.45em;font-weight:600;color:var(--muted);margin-top:.15em}
 body[data-mode="participant"].is-live .roadbar{pointer-events:none}
+
+/* v12 */
+.joined{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-width:420px}
+.jchip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-radius:999px;background:var(--teal-soft);border:1.5px solid var(--teal);font-size:.85rem;font-weight:600}
+.jx{border:none;background:var(--surface);color:var(--ink);border-radius:50%;width:20px;height:20px;line-height:1;cursor:pointer;font-size:.9rem;padding:0}
+.jx:hover{background:var(--pink);color:#fff}
 </style>
 </head>
 <body data-mode="presenter">
@@ -621,12 +627,15 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
         <p class="byline">Your guide today: <span contenteditable="true" id="hostName" spellcheck="false"></span> 🛺</p>
         <div class="joinbox presenter-only" id="joinBox" hidden>
           <div id="qr"></div>
-          <div><p class="ko">Join on your phone to vote live</p><p class="joinurl" id="joinUrl"></p></div>
+          <div><p class="ko">Join on your phone to vote live</p><p class="joinurl" id="joinUrl"></p>
+            <div class="joined" id="joined"></div>
+            <div class="row" style="margin-top:8px"><button class="btn small" id="kickAll">Remove all participants</button></div>
+          </div>
         </div>
         <div class="row"><button class="btn pink host-ctl" data-next>Let's begin</button><span class="hint host-ctl">Use <kbd>→</kbd> or <kbd>Space</kbd> to move on</span></div>
       </div>
       <aside class="notes" hidden>
-        <p>이름 칸을 클릭해서 본인 이름을 입력하세요. 데이터베이스가 연결되어 있으면 참가자용 QR 코드가 이 화면에 나타나요.</p>
+        <p>이름 칸을 클릭해서 본인 이름을 입력하세요. 데이터베이스가 연결되어 있으면 참가자용 QR 코드와 함께, 접속한 사람의 이름이 실시간으로 이 화면에 나타나요. 이름 옆 ×를 누르면 그 사람(과 그 사람의 투표)을 지울 수 있어요. 리허설 참가자는 발표 전에 지우세요.</p>
         <p class="say">"Good morning! Today's topic is cultural difference. Have you ever looked at a colleague and thought, why did they do that? That feeling is where we start today. Please scan the QR code and type your name. We'll vote a lot today."</p>
       </aside>
     </section>
@@ -1161,6 +1170,17 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
     polling = false;
   }
 
+  function renderJoined(){
+    const box = $('#joined'); if (!box || !LIVE || !PRESENTER) return;
+    const ids = Object.keys(S.people);
+    box.innerHTML = ids.length ? '' : '<span class="ko">Nobody has joined yet.</span>';
+    ids.forEach(id => {
+      const chip = document.createElement('span'); chip.className = 'jchip'; chip.textContent = S.people[id];
+      const x = document.createElement('button'); x.className = 'jx'; x.textContent = '\u00d7'; x.title = 'Remove ' + S.people[id];
+      x.addEventListener('click', () => { if (!window.confirm('Remove ' + S.people[id] + ' and their votes?')) return; delete S.people[id]; renderAll(); act('kick', { id }); });
+      chip.appendChild(x); box.appendChild(chip);
+    });
+  }
   function setLive(on, text){
     const chip = $('#liveChip');
     document.body.classList.toggle('is-live', LIVE);
@@ -1441,14 +1461,14 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
   $('#names').value = store.get('names', '');
   $('#names').addEventListener('input', () => { store.set('names', $('#names').value); renderChips(); });
   function openPicker(autoSpin){
-    if (LIVE && !getNames().length) fillJoined();
+    if (LIVE) fillJoined(true);
     renderChips();
     if (!dlg.open){ try{ dlg.showModal(); }catch(e){ dlg.setAttribute('open', ''); } }
     if (autoSpin && getNames().length) spin();
   }
-  function fillJoined(){
+  function fillJoined(quiet){
     const names = Object.values(S.people);
-    if (!names.length){ toast('Nobody has joined yet'); return; }
+    if (!names.length){ if (!quiet) toast('Nobody has joined yet'); return; }
     $('#names').value = names.join('\n'); store.set('names', $('#names').value); renderChips();
   }
   let spinning = false;
@@ -1504,6 +1524,10 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
     if (LIVE) act('clear', { prefix });
   }
   $$('[data-clear]').forEach(b => b.addEventListener('click', () => clearPrefix(b.dataset.clear)));
+  if ($('#kickAll')) $('#kickAll').addEventListener('click', () => {
+    if (!window.confirm('Remove ALL participants and all their votes? They can rejoin by scanning the QR again.')) return;
+    S = Object.assign(empty(), { nav:S.nav }); renderAll(); act('kickall', {}); toast('All participants removed');
+  });
   $('#tReset').addEventListener('click', () => {
     if (!window.confirm('Clear all live votes, ideas and reactions in this room?')) return;
     S = Object.assign(empty(), { people:S.people, nav:S.nav }); renderAll();
@@ -2033,7 +2057,7 @@ body[data-mode="participant"].is-live .roadbar{pointer-events:none}
     if (s.querySelector('#beam')) setTimeout(renderBalance, 60);
   }
 
-  function renderAll(){ renderSpeeds(); renderR1(); renderR2(); renderR3(); renderSit(); renderDec(); renderGauge(); renderBalance(); renderMix(); renderReact(); setLive(LIVE); }
+  function renderAll(){ renderJoined(); renderSpeeds(); renderR1(); renderR2(); renderR3(); renderSit(); renderDec(); renderGauge(); renderBalance(); renderMix(); renderReact(); setLive(LIVE); }
 
   /* =========== presenter join box / link =========== */
   function participantUrl(){ return location.origin + '/' + (ROOM !== 'main' ? '?room=' + ROOM : ''); }
